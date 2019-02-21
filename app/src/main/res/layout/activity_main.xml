@@ -1,23 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#3b3939"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/open"
+    <RelativeLayout
+        android:id="@+id/categories"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="#9ca39d"
-        android:textSize="60sp">
+        android:layout_height="wrap_content">
 
-    </TextView>
+        <ImageButton
+            android:id="@+id/Food"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/C_fd" />
+
+        <ImageButton
+            android:id="@+id/Clothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/Food"
+            android:layout_toRightOf="@id/Food"
+            android:src="@mipmap/C_cls" />
+
+        <ImageButton
+            android:id="@+id/Exercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/Food"
+            android:src="@mipmap/C_exc" />
+
+        <ImageButton
+            android:id="@+id/Furniture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/Exercise"
+            android:layout_toRightOf="@id/Exercise"
+            android:layout_below="@id/Clothes"
+            android:src="@mipmap/C_fur" />
+
+        <ImageButton
+            android:id="@+id/Electronic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/Furniture"
+            android:layout_toRightOf="@id/Furniture"
+            android:layout_below="@id/Makeup"
+            android:src="@mipmap/C_elc" />
+
+        <ImageButton
+            android:id="@+id/Makeup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/Clothes"
+            android:layout_toRightOf="@id/Clothes"
+            android:src="@mipmap/C_mkup" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categories">
+
+    </ListView>
 
 
 </android.support.constraint.ConstraintLayout>
