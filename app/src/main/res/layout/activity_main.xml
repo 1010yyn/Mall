@@ -1,66 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/categories"
+    <SearchView
+        android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+    </SearchView>
+
+
+    <RelativeLayout
+        android:id="@+id/categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/search_bar">
 
         <ImageButton
             android:id="@+id/Food"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/C_fd" />
+            android:layout_margin="2dp"
+            android:background="@drawable/c_fd" />
 
         <ImageButton
             android:id="@+id/Clothes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:layout_toEndOf="@id/Food"
             android:layout_toRightOf="@id/Food"
-            android:src="@mipmap/C_cls" />
+            android:background="@drawable/c_cls" />
+
+        <ImageButton
+            android:id="@+id/Makeup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_toEndOf="@id/Clothes"
+            android:layout_toRightOf="@id/Clothes"
+            android:background="@drawable/c_mkup" />
 
         <ImageButton
             android:id="@+id/Exercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/Food"
-            android:src="@mipmap/C_exc" />
+            android:layout_margin="2dp"
+            android:background="@drawable/c_excs" />
 
         <ImageButton
             android:id="@+id/Furniture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/Clothes"
+            android:layout_margin="2dp"
             android:layout_toEndOf="@id/Exercise"
             android:layout_toRightOf="@id/Exercise"
-            android:layout_below="@id/Clothes"
-            android:src="@mipmap/C_fur" />
+            android:background="@drawable/c_fur" />
 
         <ImageButton
             android:id="@+id/Electronic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/Makeup"
+            android:layout_margin="2dp"
             android:layout_toEndOf="@id/Furniture"
             android:layout_toRightOf="@id/Furniture"
-            android:layout_below="@id/Makeup"
-            android:src="@mipmap/C_elc" />
-
-        <ImageButton
-            android:id="@+id/Makeup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/Clothes"
-            android:layout_toRightOf="@id/Clothes"
-            android:src="@mipmap/C_mkup" />
+            android:background="@drawable/c_elc" />
 
     </RelativeLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/categories">
