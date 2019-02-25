@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,72 +17,109 @@
         android:id="@+id/categories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/search_bar">
+        android:layout_below="@id/search_bar">
 
-        <ImageButton
+        <Button
             android:id="@+id/Food"
-            android:layout_width="wrap_content"
+            android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:background="@drawable/c_fd" />
+            android:background="@drawable/c_fd"
+            android:text="@string/C_fd"
+            android:textSize="20sp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/Clothes"
-            android:layout_width="wrap_content"
+            android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:layout_toEndOf="@id/Food"
             android:layout_toRightOf="@id/Food"
-            android:background="@drawable/c_cls" />
+            android:background="@drawable/c_cls"
+            android:text="@string/C_cls"
+            android:textSize="20sp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/Makeup"
-            android:layout_width="wrap_content"
+            android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:layout_toEndOf="@id/Clothes"
             android:layout_toRightOf="@id/Clothes"
-            android:background="@drawable/c_mkup" />
+            android:background="@drawable/c_mkup"
+            android:text="@string/C_mkup"
+            android:textSize="20sp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/Exercise"
-            android:layout_width="wrap_content"
+            android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/Food"
             android:layout_margin="2dp"
-            android:background="@drawable/c_excs" />
+            android:background="@drawable/c_excs"
+            android:text="@string/C_exc"
+            android:textSize="20sp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/Furniture"
-            android:layout_width="wrap_content"
+            android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/Clothes"
             android:layout_margin="2dp"
             android:layout_toEndOf="@id/Exercise"
             android:layout_toRightOf="@id/Exercise"
-            android:background="@drawable/c_fur" />
+            android:background="@drawable/c_fur"
+            android:text="@string/C_fur"
+            android:textSize="20sp" />
 
-        <ImageButton
+        <Button
             android:id="@+id/Electronic"
-            android:layout_width="wrap_content"
+            android:layout_width="119dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/Makeup"
             android:layout_margin="2dp"
             android:layout_toEndOf="@id/Furniture"
             android:layout_toRightOf="@id/Furniture"
-            android:background="@drawable/c_elc" />
+            android:background="@drawable/c_elc"
+            android:text="@string/C_elc"
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
-    <ListView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categories">
+        android:layout_below="@id/categories">
 
-    </ListView>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item"
+            android:layout_margin="2dp"></ListView>
+    </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark">
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+            android:id="@+id/Mainpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/c_fd"
+            android:text="主页"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/c_mkup"
+            android:text="购物车"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</RelativeLayout>

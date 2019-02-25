@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Mall</string>
-    <string name="C_fd">Food</string>//食物分类
-    <string name="C_cls">Clothes</string>//衣饰分类
-    <string name="C_fur">Furniture</string>//家居分类
-    <string name="C_elc">Electronic</string>//电子产品分类
-    <string name="C_mkup">Makeup</string>//美妆分类
-    <string name="C_exc">Exercise</string>//运动分类
+    <string name="C_fd">食品</string>//食物分类
+    <string name="C_cls">衣饰</string>//衣饰分类
+    <string name="C_fur">家居</string>//家居分类
+    <string name="C_elc">电子产品</string>//电子产品分类
+    <string name="C_mkup">美妆</string>//美妆分类
+    <string name="C_exc">运动</string>//运动分类
 
 
 </resources>
