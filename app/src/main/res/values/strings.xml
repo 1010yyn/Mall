@@ -7,5 +7,12 @@
     <string name="C_mkup">美妆</string>//美妆分类
     <string name="C_exc">运动</string>//运动分类
 
+    <string name="N_home">主页</string>//导航栏——主页
+    <string name="N_cart">购物车</string>//导航栏——购物车
+
+    <string name="M_info_user">个人信息</string>//侧边栏菜单——用户信息
+    <string name="M_info_app">软件信息</string>//侧边栏菜单——软件信息
+    <string name="M_quit">退出</string>//侧边栏菜单——退出
+
 
 </resources>

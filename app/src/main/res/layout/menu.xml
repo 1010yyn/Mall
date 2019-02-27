@@ -1,37 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="250dp">
-
-    <group android:checkableBehavior="single">
-
-        <item
-            android:id="@+id/favorite"
-            android:icon="@drawable/c_fur"
-            android:checkable="true"
-            android:title="    会员" />
-
-    </group>
+    android:layout_width="250dp"
+    android:layout_height="match_parent">
 
     <item
-        android:id="@+id/wallet"
+        android:id="@+id/info_user"
+        android:checkable="true"
         android:icon="@drawable/c_fur"
-
-        android:title="    钱包" />
-
-    <item
-        android:id="@+id/photo"
-        android:icon="@drawable/c_fur"
-        android:title="    相册" />
+        android:title="@string/M_info_user" />
 
     <item
-        android:id="@+id/dress"
+        android:id="@+id/info_app"
+        android:checkable="true"
         android:icon="@drawable/c_fur"
-        android:title="    装扮" />
+        android:title="@string/M_info_app" />
 
     <item
-        android:id="@+id/file"
+        android:id="@+id/quit"
+        android:checkable="true"
         android:icon="@drawable/c_fur"
-        android:title="    文件" />
+        android:title="@string/M_quit" />
 
 </menu>
