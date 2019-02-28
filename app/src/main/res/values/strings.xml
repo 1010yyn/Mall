@@ -16,7 +16,7 @@
 
     <string name="M_info_user">个人信息</string>//侧边栏菜单——用户信息
     <string name="M_info_app">软件信息</string>//侧边栏菜单——软件信息
+    <string name="M_change_user">切换用户</string>//侧边栏菜单——切换用户
     <string name="M_quit">退出</string>//侧边栏菜单——退出
-
 
 </resources>

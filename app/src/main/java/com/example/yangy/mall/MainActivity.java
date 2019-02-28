@@ -1,6 +1,7 @@
 package com.example.yangy.mall;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -22,18 +23,23 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    String TAG = "MYTAG";
-    Button btn_food, btn_cls, btn_mkup, btn_excs, btn_fur, btn_elc;
+    private final static String TAG = "MYTAG";
 
+    private final static int REQUEST_CODE = 1;//请求标识
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private TabHost tabHost;
     private LayoutInflater inflater;
-    private ListView list_goods, list_cart;
-    private List<String> array_goods = new ArrayList<>();//商品列表
-    private List<String> array_cart = new ArrayList<>();//购物车列表
+
+    private Button btn_food, btn_cls, btn_mkup, btn_excs, btn_fur, btn_elc;//商品分类Button
+
+    private ListView list_goods, list_cart;//主页和购物车的商品列表
+    private List<String> array_goods = new ArrayList<>();//主页商品列表信息存储
+    private List<String> array_cart = new ArrayList<>();//购物车商品列表信息存储
     private AlertDialog.Builder delete_cart;//确认删除日程对话框
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +75,17 @@ public class MainActivity extends AppCompatActivity {
                     case "个人信息":
                         Log.i(TAG, "跳转个人信息界面");
                         //TODO——切换到个人信息界面
+                        intent = new Intent(MainActivity.this, Info_User.class);//为搜索结果界面创建intent
+                        intent.putExtra("str", "Info_User");
+                        startActivityForResult(intent, REQUEST_CODE);
                         break;
                     case "软件信息":
                         Log.i(TAG, "跳转个人信息界面");
                         //TODO——切换到软件信息界面
+                        break;
+                    case "切换用户":
+                        Log.i(TAG, "切换用户");
+                        //TODO——切换到用户登录界面
                         break;
                     case "退出":
                         Log.i(TAG, "退出App");
@@ -107,37 +120,61 @@ public class MainActivity extends AppCompatActivity {
         btn_food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——跳转页面（食品类）
+
+                intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
+                intent.putExtra("str", "Food");
+                Log.i(TAG, "正在跳转页面到食品类搜索结果页面");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         btn_cls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——跳转页面（衣饰类）
+                intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
+
+                intent.putExtra("str", "Clothes");
+                Log.i(TAG, "正在跳转页面到衣饰类搜索结果页面");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         btn_mkup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——跳转页面（美妆类）
+                intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
+
+                intent.putExtra("str", "Makeup");
+                Log.i(TAG, "正在跳转页面到美妆类搜索结果界面");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         btn_excs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——跳转页面（运动类）
+                intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
+
+                intent.putExtra("str", "Exercise");
+                Log.i(TAG, "正在跳转页面到运动类搜索结果");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         btn_fur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——跳转页面（家居类）
+                intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
+
+                intent.putExtra("str", "Furniture");
+                Log.i(TAG, "正在跳转页面到家居类搜索结果");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         btn_elc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——跳转页面（电子产品类）
+                intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
+
+                intent.putExtra("str", "Electronic");
+                Log.i(TAG, "正在跳转页面到电子产品类搜索结果");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
@@ -149,6 +186,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "单击商品");
                 //TODO——跳转页面显示商品详细信息
+                intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
+                intent.putExtra("str", "Goods");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
@@ -160,6 +200,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "单击购物车商品");
                 //TODO——显示商品详细信息
+                intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
+                intent.putExtra("str", "Goods");
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         //设置长按监听,长按删除商品
@@ -189,6 +232,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int reQuestCode, int resultCode, Intent data) {
+        if (reQuestCode == REQUEST_CODE) {
+            if (resultCode == Show_result.RESULT_CODE) {
+                Bundle bundle = data.getExtras();
+                String str = bundle.getString("back");
+                Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
