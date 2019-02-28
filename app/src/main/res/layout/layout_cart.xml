@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/right"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/right">
-
+    android:layout_height="match_parent">
 
     <ListView
+        android:id="@+id/cart_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_above="@id/cart_navigation">
     </ListView>
+
+    <RelativeLayout
+        android:id="@+id/cart_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/cart_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/Delete" />
+
+        <TextView
+            android:id="@+id/cart_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/cart_calculate"
+            android:layout_toStartOf="@id/cart_calculate"
+            android:text="@string/Sum" />
+
+        <Button
+            android:id="@+id/cart_calculate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/Calculate" />
+    </RelativeLayout>
 
 </RelativeLayout>

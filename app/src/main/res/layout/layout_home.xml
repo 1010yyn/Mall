@@ -78,7 +78,7 @@
         android:textSize="20sp" />
 
     <ListView
-        android:id="@+id/list_item"
+        android:id="@+id/home_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/Electronic"

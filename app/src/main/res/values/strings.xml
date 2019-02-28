@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Mall</string>
+    <string name="Delete">删除</string>
+    <string name="Calculate">结算</string>
+    <string name="Sum">合计：￥"</string>
+
     <string name="C_fd">食品</string>//食物分类
     <string name="C_cls">衣饰</string>//衣饰分类
     <string name="C_fur">家居</string>//家居分类
