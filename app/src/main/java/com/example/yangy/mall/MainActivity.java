@@ -74,14 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getTitle().toString()) {
                     case "个人信息":
                         Log.i(TAG, "跳转个人信息界面");
-                        //TODO——切换到个人信息界面
                         intent = new Intent(MainActivity.this, Info_User.class);//为搜索结果界面创建intent
                         intent.putExtra("str", "Info_User");
                         startActivityForResult(intent, REQUEST_CODE);
                         break;
                     case "软件信息":
                         Log.i(TAG, "跳转个人信息界面");
-                        //TODO——切换到软件信息界面
+                        //TODO——切换到软件信息界面（最后做！）
                         break;
                     case "切换用户":
                         Log.i(TAG, "切换用户");
@@ -199,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "单击购物车商品");
-                //TODO——显示商品详细信息
                 intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
                 intent.putExtra("str", "Goods");
                 startActivityForResult(intent, REQUEST_CODE);

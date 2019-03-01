@@ -19,4 +19,10 @@
     <string name="M_change_user">切换用户</string>//侧边栏菜单——切换用户
     <string name="M_quit">退出</string>//侧边栏菜单——退出
 
+    <string name="I_U_name">用户名</string>//个人信息——用户名
+    <string name="I_U_nickname">用户昵称</string>//个人信息——昵称
+    <string name="I_U_phone">手机号码</string>//个人信息——手机号码
+    <string name="I_U_address">收货地址</string>//个人信息——收货地址
+    <string name="I_U_address_change">修改地址</string>//个人信息——修改地址
+
 </resources>
