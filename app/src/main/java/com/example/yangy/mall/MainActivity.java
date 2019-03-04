@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder delete_cart;//确认删除日程对话框
 
     private Intent intent;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "点击" + item.getTitle().toString());
                 switch (item.getTitle().toString()) {
                     case "个人信息":
-                        Log.i(TAG, "跳转个人信息界面");
-                        intent = new Intent(MainActivity.this, Info_User.class);//为搜索结果界面创建intent
-                        intent.putExtra("str", "Info_User");
-                        startActivityForResult(intent, REQUEST_CODE);
+                        intent = new Intent(MainActivity.this, Info_User.class);//为个人信息界面创建intent
+                        Log.i(TAG, "正在跳转页面到个人信息页面");
+                        startActivity(intent);
                         break;
                     case "软件信息":
                         Log.i(TAG, "跳转个人信息界面");
@@ -119,61 +119,55 @@ public class MainActivity extends AppCompatActivity {
         btn_food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 intent.putExtra("str", "Food");
                 Log.i(TAG, "正在跳转页面到食品类搜索结果页面");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         btn_cls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-
                 intent.putExtra("str", "Clothes");
                 Log.i(TAG, "正在跳转页面到衣饰类搜索结果页面");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         btn_mkup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-
                 intent.putExtra("str", "Makeup");
                 Log.i(TAG, "正在跳转页面到美妆类搜索结果界面");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         btn_excs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-
                 intent.putExtra("str", "Exercise");
                 Log.i(TAG, "正在跳转页面到运动类搜索结果");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         btn_fur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-
                 intent.putExtra("str", "Furniture");
                 Log.i(TAG, "正在跳转页面到家居类搜索结果");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         btn_elc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-
                 intent.putExtra("str", "Electronic");
                 Log.i(TAG, "正在跳转页面到电子产品类搜索结果");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
 
@@ -187,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO——跳转页面显示商品详细信息
                 intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
                 intent.putExtra("str", "Goods");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
 
@@ -200,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "单击购物车商品");
                 intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
                 intent.putExtra("str", "Goods");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivity(intent);
             }
         });
         //设置长按监听,长按删除商品

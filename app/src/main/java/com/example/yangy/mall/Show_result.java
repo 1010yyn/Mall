@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import javax.security.auth.login.LoginException;
-
 public class Show_result extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
