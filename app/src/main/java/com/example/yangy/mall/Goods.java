@@ -8,7 +8,7 @@ import android.util.Log;
 public class Goods extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
-    public final static int RESULT_CODE = 1;
+    private final static int REQUEST_CODE = 1;//请求标识
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

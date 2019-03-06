@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mall</string>
     <string name="Delete">删除</string>
+    <string name="Confirm">确定</string>
     <string name="Calculate">结算</string>
     <string name="Sum">合计：￥"</string>
 
@@ -23,6 +24,6 @@
     <string name="I_U_nickname">用户昵称</string>//个人信息——昵称
     <string name="I_U_phone">手机号码</string>//个人信息——手机号码
     <string name="I_U_address">收货地址</string>//个人信息——收货地址
-    <string name="I_U_address_change">修改地址</string>//个人信息——修改地址
+    <string name="I_U_info_change">修改信息</string>//个人信息——修改地址
 
 </resources>

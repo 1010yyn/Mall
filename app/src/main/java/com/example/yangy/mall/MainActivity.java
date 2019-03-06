@@ -40,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder delete_cart;//确认删除日程对话框
 
     private Intent intent;
-    private Bundle bundle;
+    private Bundle bundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "开屏");
         setContentView(R.layout.start);
-        //TODO——停留3s
+        //TODO——welcomeactivity切换
         Log.i(TAG, "开屏停留3s");
         //TODO——链接数据库，加载主界面内容
         Log.i(TAG, "链接数据库");

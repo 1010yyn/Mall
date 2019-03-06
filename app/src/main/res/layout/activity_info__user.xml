@@ -17,6 +17,7 @@
         tools:ignore="HardcodedText" />
 
     <ImageView
+        android:id="@+id/info_user_head"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal|center_vertical"
@@ -32,7 +33,6 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/info_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -40,12 +40,11 @@
             android:text="@string/I_U_name" />
 
         <TextView
-            android:id="@+id/info_user_text_name"
+            android:id="@+id/info_user_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="是狗蛋本人（不可更改）" />
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
@@ -64,7 +63,7 @@
             android:gravity="center_horizontal"
             android:text="@string/I_U_nickname" />
 
-        <EditText
+        <TextView
             android:id="@+id/info_user_nickname"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -87,11 +86,12 @@
             android:gravity="center_horizontal"
             android:text="@string/I_U_phone" />
 
-        <EditText
+        <TextView
             android:id="@+id/info_user_phone"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
@@ -109,22 +109,22 @@
             android:gravity="center_horizontal"
             android:text="@string/I_U_address" />
 
-        <EditText
+        <TextView
             android:id="@+id/info_user_address"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/info_user_address_change"
+        android:id="@+id/info_user_info_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/I_U_address_change" />
-
+        android:text="@string/I_U_info_change" />
 
 </LinearLayout>
