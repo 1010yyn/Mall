@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal">
+
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cart_shop_goods_selection"
+        android:layout_gravity="center_vertical" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/cart_shop_goods_photo"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/sample_goods_image"
+        android:layout_margin="8dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cart_shop_goods_name"
+            android:text="示例商品"
+            android:layout_margin="8dp"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cart_shop_goods_price"
+            android:text="1000.00"
+            android:layout_margin="8dp"
+            android:layout_below="@id/cart_shop_goods_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cart_shop_goods_sum"
+            android:text="1000"
+            android:layout_margin="8dp"
+            android:layout_below="@id/cart_shop_goods_name"
+            android:layout_toEndOf="@id/cart_shop_goods_price"
+            android:layout_toRightOf="@id/cart_shop_goods_price" />
+    </RelativeLayout>
+
+
+</LinearLayout>

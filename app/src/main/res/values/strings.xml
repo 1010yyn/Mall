@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Mall</string>
+
+    <string name="Cart">购物车</string>
     <string name="Delete">删除</string>
     <string name="Confirm">确定</string>
     <string name="Calculate">结算</string>

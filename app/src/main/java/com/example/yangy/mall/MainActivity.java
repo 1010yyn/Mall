@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView list_goods, list_cart;//主页和购物车的商品列表
     private List<String> array_goods = new ArrayList<>();//主页商品列表信息存储
-    private List<String> array_cart = new ArrayList<>();//购物车商品列表信息存储
+    private List<Goods_Item> array_cart = new ArrayList<>();//购物车商品列表信息存储
     private AlertDialog.Builder delete_cart;//确认删除日程对话框
 
     private Intent intent;
@@ -52,15 +52,11 @@ public class MainActivity extends AppCompatActivity {
         //TODO——链接数据库，加载主界面内容
         Log.i(TAG, "链接数据库");
         //加载主界面内容
-        try {
-            mainpage();//加载主界面
-        } catch (Exception e) {
-            Log.e(TAG, "加载主界面出现错误");
-            Log.e(TAG, e.getMessage());
-        }
+        homepage();//加载首页界面
+        cart();//加载购物车界面
     }
 
-    void mainpage() {
+    void homepage() {
         Log.i(TAG, "加载主界面");
         setContentView(R.layout.activity_main);
 
@@ -96,20 +92,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        try {
-            //选项卡
-            tabHost = findViewById(android.R.id.tabhost);//获取tabhost
-            tabHost.setup();
-            inflater = LayoutInflater.from(this);
-            inflater.inflate(R.layout.layout_home, tabHost.getTabContentView());//设置主页选项卡
-            inflater.inflate(R.layout.layout_cart, tabHost.getTabContentView());//设置购物车选项卡
-            tabHost.addTab(tabHost.newTabSpec("layout_home").setIndicator("首页").setContent(R.id.left));
-            tabHost.addTab(tabHost.newTabSpec("layout_cart").setIndicator("购物车").setContent(R.id.right));
-        } catch (Exception e) {
-            Log.e(TAG, "选项卡加载错误");
-        }
+        //选项卡
+        tabHost = findViewById(android.R.id.tabhost);//获取tabhost
+        tabHost.setup();
+        inflater = LayoutInflater.from(this);
+        inflater.inflate(R.layout.activity_main_home, tabHost.getTabContentView());//设置主页选项卡
+        inflater.inflate(R.layout.activity_main_cart, tabHost.getTabContentView());//设置购物车选项卡
+        tabHost.addTab(tabHost.newTabSpec("activity_main_home").setIndicator("首页").setContent(R.id.left));
+        tabHost.addTab(tabHost.newTabSpec("activity_main_cart").setIndicator("购物车").setContent(R.id.right));
 
-        //获取Button，设置监听
+        //获取分类Button，设置监听
         btn_food = findViewById(R.id.Food);
         btn_cls = findViewById(R.id.Clothes);
         btn_mkup = findViewById(R.id.Makeup);
@@ -184,9 +176,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    protected void cart() {
+
 
         //获取购物车listview
-        list_cart = findViewById(R.id.cart_list);
+        list_cart = findViewById(R.id.cart_shop);
         //设置单击事件
         list_cart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -223,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
+
 
     @Override
     protected void onActivityResult(int reQuestCode, int resultCode, Intent data) {
