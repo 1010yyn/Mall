@@ -5,21 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cart_shop_name"
-        android:gravity="center_horizontal"
-        android:text="@string/Cart"
-        android:layout_margin="30dp" />
+        android:id="@+id/cart_list_shop">
 
-    <ListView
-        android:id="@+id/cart_shop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cart_shop_name"
-        android:layout_above="@id/cart_navigation">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
     <RelativeLayout
         android:id="@+id/cart_navigation"
@@ -31,8 +22,8 @@
             android:id="@+id/cart_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:text="@string/Delete" />
 
         <TextView
@@ -40,8 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/cart_calculate"
             android:layout_toStartOf="@id/cart_calculate"
+            android:layout_toLeftOf="@id/cart_calculate"
             android:text="@string/Sum" />
 
         <Button
@@ -52,5 +43,4 @@
             android:layout_alignParentRight="true"
             android:text="@string/Calculate" />
     </RelativeLayout>
-
 </RelativeLayout>

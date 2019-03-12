@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Goods_Item"></activity>
+        <activity android:name=".Cart_Shop_Goods_Item"></activity>
         <activity android:name=".Info_User_Modify_Head" />
         <activity android:name=".Info_User_Modify" />
         <activity android:name=".MainActivity">

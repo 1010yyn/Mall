@@ -8,14 +8,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -33,14 +37,20 @@ public class MainActivity extends AppCompatActivity {
     private LayoutInflater inflater;
 
     private Button btn_food, btn_cls, btn_mkup, btn_excs, btn_fur, btn_elc;//商品分类Button
-
-    private ListView list_goods, list_cart;//主页和购物车的商品列表
+    private TextView name;
+    private ImageView head;
+    private RecyclerView list_goods, list_cart;//主页和购物车的商品列表
     private List<String> array_goods = new ArrayList<>();//主页商品列表信息存储
-    private List<Goods_Item> array_cart = new ArrayList<>();//购物车商品列表信息存储
+    private List<String> array_cart = new ArrayList<>();//购物车商品列表信息存储
     private AlertDialog.Builder delete_cart;//确认删除日程对话框
 
     private Intent intent;
     private Bundle bundle = new Bundle();
+
+    private Data_Cart_Bean data_cart_bean;
+
+    private int Head;//侧边栏头像
+    private String Name, Head_Name;//侧边栏用户名,头像文件名
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +70,18 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "加载主界面");
         setContentView(R.layout.activity_main);
 
+        //TODO——获取用户头像和昵称
+        Name = "啊哦";
+        Head_Name = "sample_info_user_head";
+        Head = getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName());
+
         //侧边栏
         drawerLayout = findViewById(R.id.main_page);
         navigationView = findViewById(R.id.nav);
+        head = navigationView.getHeaderView(0).findViewById(R.id.header_head);
+        name = navigationView.getHeaderView(0).findViewById(R.id.header_name);
+        name.setText(Name);
+        head.setImageResource(Head);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -163,62 +182,68 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //获取主页listview
+        //获取主页list
         list_goods = findViewById(R.id.home_list);
-        //设置单击事件
-        list_goods.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "单击商品");
-                //TODO——跳转页面显示商品详细信息
-                intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Goods");
-                startActivity(intent);
-            }
-        });
+        //init_list_goods();
+        //TODO——设置单击事件
+        //TODO——跳转页面显示商品详细信息
     }
 
     protected void cart() {
-
-
         //获取购物车listview
-        list_cart = findViewById(R.id.cart_shop);
+        list_cart = findViewById(R.id.cart_list_shop);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        list_cart.setLayoutManager(manager);
+        List<Object> list = sortData(data_cart_bean);
+        //initdata();
+        // Cart_Shop_Item_adapter adapter = new Cart_Shop_Item_adapter(array_cart);
+        //adapter.setOnRecyclerViewListener(this);
+        //list_cart.setAdapter(adapter);
+
+
+        //TODO——单击事件，长按事件
         //设置单击事件
-        list_cart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "单击购物车商品");
-                intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Goods");
-                startActivity(intent);
-            }
-        });
+//        list_cart.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.i(TAG, "单击购物车商品");
+//                intent = new Intent(MainActivity.this, Goods.class);//为搜索结果界面创建intent
+//                intent.putExtra("str", "Goods");
+//                startActivity(intent);
+//            }
+//        });
         //设置长按监听,长按删除商品
-        list_cart.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                Log.i(TAG, "长按购物车商品");
-                delete_cart = new AlertDialog.Builder(MainActivity.this);//确认删除对话框
-                delete_cart.setTitle("系统提示：");
-                delete_cart.setMessage("确定要删除该商品吗？");
-                delete_cart.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "取消删除");//不做操作
-                        dialog.dismiss();//关闭对话框
-                    }
-                });
-                delete_cart.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "确认删除");//删除该条记录
-                        //TODO——获取该条记录，从数据库删除，并刷新列表
-                    }
-                });
-                delete_cart.create().show();
-                return true;
-            }
-        });
+//        list_cart.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+//                Log.i(TAG, "长按购物车商品");
+//                delete_cart = new AlertDialog.Builder(MainActivity.this);//确认删除对话框
+//                delete_cart.setTitle("系统提示：");
+//                delete_cart.setMessage("确定要删除该商品吗？");
+//                delete_cart.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.i(TAG, "取消删除");//不做操作
+//                        dialog.dismiss();//关闭对话框
+//                    }
+//                });
+//                delete_cart.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.i(TAG, "确认删除");//删除该条记录
+//                        //TODO——获取该条记录，从数据库删除，并刷新列表
+//                    }
+//                });
+//                delete_cart.create().show();
+//                return true;
+//            }
+//        });
+    }
+
+    private List<Object> sortData(Data_Cart_Bean bean) {
+        List<Data_Shop_Bean> arrays = bean.getData();
+        List<Object> arrays_obj = new ArrayList<>();
+        return arrays_obj;
     }
 
 
