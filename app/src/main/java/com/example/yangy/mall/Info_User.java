@@ -1,8 +1,6 @@
 package com.example.yangy.mall;
 
 import android.content.Intent;
-import android.media.Image;
-import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.jar.Attributes;
 
 public class Info_User extends AppCompatActivity {
 
@@ -30,7 +25,7 @@ public class Info_User extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info__user);
+        setContentView(R.layout.layout_info__user);
         Log.i(TAG, "成功跳转到个人信息页面");
 
         //TODO——获取用户信息

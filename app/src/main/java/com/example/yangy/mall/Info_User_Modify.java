@@ -28,7 +28,7 @@ public class Info_User_Modify extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info__user__modify);
+        setContentView(R.layout.layout_info__user__modify);
         intent = getIntent();
         bundle = intent.getExtras();
 

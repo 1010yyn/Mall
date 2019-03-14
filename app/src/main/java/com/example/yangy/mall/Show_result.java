@@ -13,7 +13,7 @@ public class Show_result extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_result);
+        setContentView(R.layout.layout_show_result);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String str = bundle.getString("str");

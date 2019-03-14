@@ -15,7 +15,7 @@ public class Info_User_Modify_Head extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info__user__modify__head);
+        setContentView(R.layout.layout_info__user__modify__head);
         //TODO——头像列表
         //TODO——get头像ID
         //返回头像ID

@@ -13,7 +13,7 @@ public class Goods extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goods);
+        setContentView(R.layout.layout_goods);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String str = bundle.getString("str");

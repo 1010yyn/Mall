@@ -1,6 +1,5 @@
 package com.example.yangy.mall;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,10 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,14 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView name;
     private ImageView head;
     private RecyclerView list_goods, list_cart;//主页和购物车的商品列表
-    private List<String> array_goods = new ArrayList<>();//主页商品列表信息存储
-    private List<String> array_cart = new ArrayList<>();//购物车商品列表信息存储
     private AlertDialog.Builder delete_cart;//确认删除日程对话框
 
     private Intent intent;
     private Bundle bundle = new Bundle();
 
-    private Data_Cart_Bean data_cart_bean;
+    private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
 
     private int Head;//侧边栏头像
     private String Name, Head_Name;//侧边栏用户名,头像文件名
@@ -56,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "开屏");
-        setContentView(R.layout.start);
+        setContentView(R.layout.layout_start);
         //TODO——welcomeactivity切换
         Log.i(TAG, "开屏停留3s");
         //TODO——链接数据库，加载主界面内容
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     void homepage() {
         Log.i(TAG, "加载主界面");
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.layout_main);
 
         //TODO——获取用户头像和昵称
         Name = "啊哦";
@@ -115,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
         tabHost = findViewById(android.R.id.tabhost);//获取tabhost
         tabHost.setup();
         inflater = LayoutInflater.from(this);
-        inflater.inflate(R.layout.activity_main_home, tabHost.getTabContentView());//设置主页选项卡
-        inflater.inflate(R.layout.activity_main_cart, tabHost.getTabContentView());//设置购物车选项卡
-        tabHost.addTab(tabHost.newTabSpec("activity_main_home").setIndicator("首页").setContent(R.id.left));
-        tabHost.addTab(tabHost.newTabSpec("activity_main_cart").setIndicator("购物车").setContent(R.id.right));
+        inflater.inflate(R.layout.layout_main_home, tabHost.getTabContentView());//设置主页选项卡
+        inflater.inflate(R.layout.layout_main_cart, tabHost.getTabContentView());//设置购物车选项卡
+        tabHost.addTab(tabHost.newTabSpec("layout_main_home").setIndicator("首页").setContent(R.id.left));
+        tabHost.addTab(tabHost.newTabSpec("layout_main_cart").setIndicator("购物车").setContent(R.id.right));
 
         //获取分类Button，设置监听
         btn_food = findViewById(R.id.Food);
@@ -190,16 +185,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void cart() {
-        //获取购物车listview
-        list_cart = findViewById(R.id.cart_list_shop);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
-        list_cart.setLayoutManager(manager);
-        List<Object> list = sortData(data_cart_bean);
-        //initdata();
-        // Cart_Shop_Item_adapter adapter = new Cart_Shop_Item_adapter(array_cart);
-        //adapter.setOnRecyclerViewListener(this);
-        //list_cart.setAdapter(adapter);
 
+        //TODO——获取购物车数据
+        getdata_cart();
+
+        //获取recycleview
+        list_cart = findViewById(R.id.cart_list_shop);
+        // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
+        List<Object> list = sortData(data_cart_bean);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        list_cart.setLayoutManager(manager);
+        Cart_Shop_Item_adapter adapter = new Cart_Shop_Item_adapter(list);
+        list_cart.setAdapter(adapter);
 
         //TODO——单击事件，长按事件
         //设置单击事件
@@ -241,8 +238,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private List<Object> sortData(Data_Cart_Bean bean) {
-        List<Data_Shop_Bean> arrays = bean.getData();
+        List<Data_Cart_Bean.Data_Shop_Bean> arrays = bean.getShopData();
+        // 用来进行数据重组的新的集合arrays_obj，之所以泛型设为Object，是因为该例中的集合元素既可能为String有可能是一个bean
         List<Object> arrays_obj = new ArrayList<>();
+        for (Data_Cart_Bean.Data_Shop_Bean array : arrays) {
+            List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> logs = array.getGoodsData();//商品列表
+            // 拿到String值添加进集合arrays_obj
+            arrays_obj.add(array.getName());
+            // 如果该标题下的集合里面有数据的话，遍历拿到添加进新集合arrays_obj
+            if (logs != null && logs.size() > 0) {
+                for (Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean log : logs) {
+                    arrays_obj.add(log);
+                }
+            }
+        }
         return arrays_obj;
     }
 
@@ -257,6 +266,78 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void getdata_cart() {
+        //临时存储信息
+        Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
+        Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
+        List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
+        List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean>();//临时店铺列表
+
+        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
+        //设置商品1信息
+        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+        goods_bean.setName("123");
+        goods_bean.setPrice(123);
+        goods_bean.setSum(1);
+        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        //添加商品至临时商品列表
+        data_goods_beans.add(goods_bean);
+
+        //设置商品2信息
+        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+        goods_bean.setName("541");
+        goods_bean.setPrice(432);
+        goods_bean.setSum(3);
+        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        //添加商品至临时商品列表1
+        data_goods_beans.add(goods_bean);
+
+        //设置临时商铺信息1
+        shop_bean = new Data_Cart_Bean.Data_Shop_Bean();
+        shop_bean.setName("一家店");
+        //将商品列表加入临时店铺1
+        shop_bean.setGoodsData(data_goods_beans);
+
+        //将店铺加入临时店铺列表
+        data_shop_beans.add(shop_bean);
+
+
+        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
+        //设置商品3信息
+        goods_bean.setName("324");
+        goods_bean.setPrice(123);
+        goods_bean.setSum(1);
+        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        //添加商品至临时商品列表
+        data_goods_beans.add(goods_bean);
+
+        //设置商品4信息
+        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+        goods_bean.setName("793");
+        goods_bean.setPrice(432);
+        goods_bean.setSum(3);
+        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        //添加商品至临时商品列表2
+        data_goods_beans.add(goods_bean);
+
+        //设置临时商铺信息2
+        shop_bean = new Data_Cart_Bean.Data_Shop_Bean();
+        shop_bean.setName("另一家店");
+        //将商品列表加入临时店铺2
+        shop_bean.setGoodsData(data_goods_beans);
+
+        //将店铺加入临时店铺列表
+        data_shop_beans.add(shop_bean);
+
+        //设置购物车内店铺数量
+        data_cart_bean.setAmount(1);
+        //将店铺列表加入购物车
+        data_cart_bean.setShopData(data_shop_beans);
+
+
+    }
+
 
     @Override
     protected void onDestroy() {
