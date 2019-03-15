@@ -14,9 +14,9 @@ import android.widget.TextView;
 public class Info_User_Modify extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
-    private final static int REQUEST_CODE = 3;//请求标识
+    public final static int REQUEST_CODE = 3;//请求标识
 
-    private Intent intent;
+    private Intent intent1, intent2;
     private Bundle bundle = new Bundle();
     private TextView id, nickname, phone, address;
     private ImageView head;
@@ -29,8 +29,8 @@ public class Info_User_Modify extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_info__user__modify);
-        intent = getIntent();
-        bundle = intent.getExtras();
+        intent1 = getIntent();
+        bundle = intent1.getExtras();
 
         Log.i(TAG, "成功跳转信息修改界面");
 
@@ -54,14 +54,15 @@ public class Info_User_Modify extends AppCompatActivity {
         nickname.setText(Nickname);
         phone.setText(Phone);
         address.setText(Address);
+        head.setImageResource(getResources().getIdentifier(Head, "drawable", getBaseContext().getPackageName()));
 
         head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "跳转更换头像");
                 //TODO——单击头像切换头像
-                intent = new Intent(Info_User_Modify.this, Info_User_Modify_Head.class);
-                startActivityForResult(intent, 4);
+                intent2 = new Intent(Info_User_Modify.this, Info_User_Modify_Head.class);
+                startActivityForResult(intent2, REQUEST_CODE, bundle);
             }
         });
 
@@ -87,15 +88,13 @@ public class Info_User_Modify extends AppCompatActivity {
                         Nickname = nickname.getText().toString();
                         Phone = phone.getText().toString();
                         Address = address.getText().toString();
-                        //bundle=new Bundle();
                         bundle.putCharSequence("id", Id);
                         bundle.putCharSequence("nick", Nickname);
                         bundle.putCharSequence("phone", Phone);
                         bundle.putCharSequence("address", Address);
                         bundle.putCharSequence("head", Head);
                         //TODO——更新数据库
-                        //返回数据
-                        setResult(3, intent.putExtras(bundle));
+                        setResult(3, intent1.putExtras(bundle));
                         finish();
                     }
                 });
@@ -106,9 +105,16 @@ public class Info_User_Modify extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int reQuestCode, int resultCode, Intent data) {
-        if (reQuestCode == REQUEST_CODE && resultCode == 4) {
+        if (reQuestCode == REQUEST_CODE && resultCode == Info_User_Modify_Head.REQUEST_CODE) {
             Bundle bundle_head = data.getExtras();
             Head = bundle_head.getString("head");//获取头像ID
+            head.setImageResource(getResources().getIdentifier(Head, "drawable", getBaseContext().getPackageName()));//重新设置头像
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(REQUEST_CODE, intent1.putExtras(bundle));
+        finish();
     }
 }

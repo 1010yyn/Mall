@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="Head_User">120dp</dimen>
+    <dimen name="GoodsPreview">100dp</dimen>
+    <dimen name="Margin_Cart_ShopTitle">8sp</dimen>
+    <dimen name="Margin_Cart_Goods">24sp</dimen>
+    <dimen name="Margin_HeadSelection">35dp</dimen>
+</resources>

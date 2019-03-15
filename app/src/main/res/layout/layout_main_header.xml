@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/header_head"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="@dimen/Head_User"
+        android:layout_height="@dimen/Head_User"
         android:layout_margin="16dp" />
 
     <TextView

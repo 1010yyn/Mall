@@ -22,7 +22,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_weight="1"
-        android:src="@drawable/sample_info_user_head"
+        android:src="@drawable/head5"
         tools:ignore="ContentDescription" />
 
     <LinearLayout

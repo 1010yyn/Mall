@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="32dp">
+    android:layout_marginLeft="@dimen/Margin_Cart_Goods">
 
 
     <CheckBox
@@ -12,8 +12,8 @@
         android:layout_gravity="center_vertical" />
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/GoodsPreview"
+        android:layout_height="@dimen/GoodsPreview"
         android:id="@+id/cart_shop_goods__photo"
         android:layout_gravity="center_vertical"
         android:src="@drawable/sample_goods_image"

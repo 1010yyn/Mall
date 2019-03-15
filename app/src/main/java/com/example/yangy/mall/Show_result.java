@@ -8,7 +8,6 @@ import android.util.Log;
 public class Show_result extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
-    public final static int RESULT_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,10 +12,10 @@ import android.widget.TextView;
 public class Info_User extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
-    private final static int REQUEST_CODE = 2;//请求标识
+    public final static int REQUEST_CODE = 2;//请求标识
 
     private Button modify;
-    private Intent intent;
+    private Intent intent1, intent2;
     private Bundle bundle = new Bundle();
     private TextView id, nickname, phone, address;
     private ImageView head;
@@ -29,7 +29,7 @@ public class Info_User extends AppCompatActivity {
         Log.i(TAG, "成功跳转到个人信息页面");
 
         //TODO——获取用户信息
-        Head = "R.drawable.sample_info_user_head";
+        Head = "head5";
         Id = "是狗蛋本人";
         Nickname = "啊哦";
         Phone = "177****5127";
@@ -45,28 +45,39 @@ public class Info_User extends AppCompatActivity {
         //初始化信息
         init();
 
+        bundle.putCharSequence("id", Id);
+        bundle.putCharSequence("nick", Nickname);
+        bundle.putCharSequence("phone", Phone);
+        bundle.putCharSequence("address", Address);
+        bundle.putCharSequence("head", Head);
+
         //修改用户信息
         modify = findViewById(R.id.info_user_info_change);
         modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "跳转到修改用户信息界面");
-                intent = new Intent(Info_User.this, Info_User_Modify.class);
-                bundle.putCharSequence("id", Id);
-                bundle.putCharSequence("nick", Nickname);
-                bundle.putCharSequence("phone", Phone);
-                bundle.putCharSequence("address", Address);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE, bundle);
+                intent2 = new Intent(Info_User.this, Info_User_Modify.class);
+                intent2.putExtras(bundle);
+                startActivityForResult(intent2, REQUEST_CODE, bundle);
                 //TODO——修改用户信息
             }
         });
 
     }
 
+    void init() {
+        //设置信息
+        head.setImageResource(getResources().getIdentifier(Head, "drawable", getBaseContext().getPackageName()));//设置头像
+        id.setText(Id);
+        nickname.setText(Nickname);
+        phone.setText(Phone);
+        address.setText(Address);
+    }
+
     @Override
     protected void onActivityResult(int reQuestCode, int resultCode, Intent data) {
-        if (reQuestCode == REQUEST_CODE && resultCode == 3) {
+        if (reQuestCode == REQUEST_CODE && resultCode == Info_User_Modify.REQUEST_CODE) {
             bundle = data.getExtras();
             Head = bundle.getString("head");
             Id = bundle.getString("id");
@@ -77,12 +88,12 @@ public class Info_User extends AppCompatActivity {
         }
     }
 
-    void init() {
-        //设置信息
-        head.setImageResource(R.drawable.sample_info_user_head);//设置头像
-        id.setText(Id);
-        nickname.setText(Nickname);
-        phone.setText(Phone);
-        address.setText(Address);
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG, "点击返回键");
+        intent1 = new Intent(Info_User.this, MainActivity.class);
+        setResult(REQUEST_CODE, intent1.putExtras(bundle));
+        finish();
     }
+
 }

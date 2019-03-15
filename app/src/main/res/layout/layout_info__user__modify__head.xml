@@ -4,12 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
     tools:context=".Info_User_Modify_Head">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/head_selection1"
+        android:layout_marginHorizontal="@dimen/sp_12">
 
-    </ListView>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd1"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
 
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd2"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd3"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd4"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/head1"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head1" />
+
+        <ImageView
+            android:id="@+id/head2"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head2" />
+
+        <ImageView
+            android:id="@+id/head3"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head3" />
+
+        <ImageView
+            android:id="@+id/head4"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head4" />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/head_selection2"
+        android:layout_marginHorizontal="@dimen/sp_12">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd5"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd6"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd7"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hd8"
+            android:layout_marginVertical="@dimen/Margin_HeadSelection" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/head5"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head5" />
+
+        <ImageView
+            android:id="@+id/head6"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head6" />
+
+        <ImageView
+            android:id="@+id/head7"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head7" />
+
+        <ImageView
+            android:id="@+id/head8"
+            android:layout_width="@dimen/Head_User"
+            android:layout_height="@dimen/Head_User"
+            android:src="@drawable/head8" />
+
+    </LinearLayout>
 </LinearLayout>
