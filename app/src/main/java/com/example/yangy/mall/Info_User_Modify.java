@@ -60,7 +60,6 @@ public class Info_User_Modify extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "跳转更换头像");
-                //TODO——单击头像切换头像
                 intent2 = new Intent(Info_User_Modify.this, Info_User_Modify_Head.class);
                 startActivityForResult(intent2, REQUEST_CODE, bundle);
             }

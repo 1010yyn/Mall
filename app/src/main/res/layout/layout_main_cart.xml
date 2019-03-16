@@ -26,15 +26,6 @@
             android:layout_alignParentLeft="true"
             android:text="@string/Delete" />
 
-        <TextView
-            android:id="@+id/cart_sum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/cart_calculate"
-            android:layout_toLeftOf="@id/cart_calculate"
-            android:text="@string/Sum" />
-
         <Button
             android:id="@+id/cart_calculate"
             android:layout_width="wrap_content"

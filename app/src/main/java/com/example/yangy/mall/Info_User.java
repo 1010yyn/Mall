@@ -60,7 +60,6 @@ public class Info_User extends AppCompatActivity {
                 intent2 = new Intent(Info_User.this, Info_User_Modify.class);
                 intent2.putExtras(bundle);
                 startActivityForResult(intent2, REQUEST_CODE, bundle);
-                //TODO——修改用户信息
             }
         });
 

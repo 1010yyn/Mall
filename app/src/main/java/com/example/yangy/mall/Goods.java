@@ -19,5 +19,6 @@ public class Goods extends AppCompatActivity {
         String str = bundle.getString("str");
         Log.i(TAG, "成功跳转到商品页面，本商品关键词为：" + str);
         //TODO——显示商品信息
+
     }
 }
