@@ -186,10 +186,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //TODO——获取商品列表数据
+        getdata_cart();//所有商品放置到同一个店铺中便于展示
         //获取主页list
         list_goods = findViewById(R.id.home_list);
-        //init_list_goods();
-        //TODO——设置单击事件
+        // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
+        List<Object> list = MainActivity.sortData(data_cart_bean);
+        //创建布局管理
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        list_goods.setLayoutManager(manager);
+        final Goods_Item_adapter adapter = new Goods_Item_adapter(list);
+        //设置列表分割线
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.cart_divider));
+        list_goods.addItemDecoration(divider);
+
+        list_goods.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Log.i(TAG, "单击商品");
+                intent = new Intent(MainActivity.this, Goods.class);
+                bundle = new Bundle();//清空数据
+                bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getName());
+                bundle.putInt("photo", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPhoto());
+                bundle.putCharSequence("price", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPrice());
+                bundle.putCharSequence("description", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getDescription());
+                bundle.putCharSequence("shop", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void cart() {
@@ -220,14 +247,20 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.cart_shop_title__title:
                         Log.i(TAG, "单击店铺" + position);
                         intent = new Intent(MainActivity.this, Shop.class);//为店铺结果界面创建intent
-                        intent.putExtra("Shop", "shop");
+                        intent.putExtra("name", (String) adapter.getItem(position));
                         startActivity(intent);
                         break;
                     case R.id.cart_shop_goods__photo:
                     case R.id.cart_shop_goods__name:
                         Log.i(TAG, "单击购物车商品" + position);
-                        intent = new Intent(MainActivity.this, Goods.class);//为店铺结果界面创建intent
-                        intent.putExtra("Goods", "goods");
+                        intent = new Intent(MainActivity.this, Goods.class);//为商品结果界面创建intent
+                        bundle = new Bundle();//清空数据
+                        bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getName());
+                        bundle.putInt("photo", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPhoto());
+                        bundle.putCharSequence("price", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPrice());
+                        bundle.putCharSequence("description", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getDescription());
+                        bundle.putCharSequence("shop", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
+                        intent.putExtras(bundle);
                         startActivity(intent);
                         break;
                 }
@@ -305,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO——数据库中数据删除
     }
 
-    private List<Object> sortData(Data_Cart_Bean bean) {
+    public static List<Object> sortData(Data_Cart_Bean bean) {
         List<Data_Cart_Bean.Data_Shop_Bean> arrays = bean.getShopData();
         // 用来进行数据重组的新的集合arrays_obj，之所以泛型设为Object，是因为该例中的集合元素既可能为String有可能是一个bean
         List<Object> arrays_obj = new ArrayList<>();
@@ -337,15 +370,18 @@ public class MainActivity extends AppCompatActivity {
         goods_bean.setPrice(123);
         goods_bean.setSum(1);
         goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        goods_bean.setDescription("商品1");
         //添加商品至临时商品列表
         data_goods_beans.add(goods_bean);
 
         //设置商品2信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+        goods_bean.setShopname("一家店");
         goods_bean.setName("541");
         goods_bean.setPrice(432);
         goods_bean.setSum(3);
         goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        goods_bean.setDescription("商品2");
         //添加商品至临时商品列表1
         data_goods_beans.add(goods_bean);
 
@@ -362,19 +398,23 @@ public class MainActivity extends AppCompatActivity {
         data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
         //设置商品3信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+        goods_bean.setShopname("另一家店");
         goods_bean.setName("324");
         goods_bean.setPrice(123);
         goods_bean.setSum(1);
         goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        goods_bean.setDescription("商品3");
         //添加商品至临时商品列表
         data_goods_beans.add(goods_bean);
 
         //设置商品4信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+        goods_bean.setShopname("另一家店");
         goods_bean.setName("793");
         goods_bean.setPrice(432);
         goods_bean.setSum(3);
         goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
+        goods_bean.setDescription("商品4");
         //添加商品至临时商品列表2
         data_goods_beans.add(goods_bean);
 

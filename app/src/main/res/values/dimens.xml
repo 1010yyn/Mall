@@ -4,5 +4,6 @@
     <dimen name="GoodsPreview">100dp</dimen>
     <dimen name="Margin_Cart_ShopTitle">8sp</dimen>
     <dimen name="Margin_Cart_Goods">24sp</dimen>
-    <dimen name="Margin_HeadSelection">35dp</dimen>
+    <dimen name="Margin_HeadSelection">44dp</dimen>
+    <dimen name="Height_goods">300dp</dimen>
 </resources>

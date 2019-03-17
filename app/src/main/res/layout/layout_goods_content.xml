@@ -4,17 +4,10 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/Margin_Cart_Goods">
 
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cart_shop_goods__selection"
-        android:layout_gravity="center_vertical" />
-
     <ImageView
         android:layout_width="@dimen/GoodsPreview"
         android:layout_height="@dimen/GoodsPreview"
-        android:id="@+id/cart_shop_goods__photo"
+        android:id="@+id/shop_goods__photo"
         android:layout_gravity="center_vertical"
         android:src="@drawable/sample_goods_image"
         android:layout_margin="8dp" />
@@ -28,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cart_shop_goods__name"
+            android:id="@+id/shop_goods__name"
             android:text="示例商品"
             android:layout_margin="8dp"
             android:layout_gravity="center_vertical" />
@@ -36,21 +29,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cart_shop_goods__price"
+            android:id="@+id/shop_goods__price"
             android:text="1000.00"
             android:layout_margin="8dp"
-            android:layout_below="@id/cart_shop_goods__name" />
+            android:layout_below="@id/shop_goods__name" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cart_shop_goods__sum"
+            android:id="@+id/shop_goods__sum"
             android:text="1000"
             android:layout_margin="8dp"
-            android:layout_below="@id/cart_shop_goods__name"
-            android:layout_toEndOf="@id/cart_shop_goods__price"
-            android:layout_toRightOf="@id/cart_shop_goods__price" />
+            android:layout_below="@id/shop_goods__name"
+            android:layout_toEndOf="@id/shop_goods__price"
+            android:layout_toRightOf="@id/shop_goods__price" />
     </RelativeLayout>
-
 
 </LinearLayout>

@@ -51,14 +51,24 @@ public class Data_Cart_Bean {
 
         //LogDOListBean
         public static class Data_Goods_Bean {
+            private String shopname;//商店名称
             private String name;//商品名称
             private int price;//商品价格
             private int sum;//商品总数
             private int photo;//商品图片资源id
             private boolean isSelected;//是否被选中
+            private String description;//商品描述
 
             Data_Goods_Bean() {
                 isSelected = false;
+            }
+
+            public String getShopname() {
+                return shopname;
+            }
+
+            public void setShopname(String shopname) {
+                this.shopname = shopname;
             }
 
             public String getName() {
@@ -99,6 +109,14 @@ public class Data_Cart_Bean {
 
             public void setStatus(boolean status) {
                 isSelected = status;
+            }
+
+            public void setDescription(String description) {
+                this.description = description;
+            }
+
+            public String getDescription() {
+                return description;
             }
         }
     }

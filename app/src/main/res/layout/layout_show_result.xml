@@ -10,15 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/result_search_bar"
-        android:layout_alignParentTop="true"></SearchView>
+        android:layout_alignParentTop="true"
+        android:tooltipText="搜索"></SearchView>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/result_list"
-        android:layout_below="@id/result_search_bar">
-
-    </ListView>
+        android:layout_below="@id/result_search_bar"></android.support.v7.widget.RecyclerView>
 
 
 </RelativeLayout>

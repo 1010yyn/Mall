@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Shop"></activity>
-        <activity android:name=".Cart_Shop_Goods_Item" />
         <activity android:name=".Info_User_Modify_Head" />
         <activity android:name=".Info_User_Modify" />
         <activity android:name=".MainActivity">

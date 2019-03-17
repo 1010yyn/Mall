@@ -113,6 +113,7 @@ public class Info_User_Modify extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Log.i(TAG, "点击返回键");
         setResult(REQUEST_CODE, intent1.putExtras(bundle));
         finish();
     }

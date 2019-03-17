@@ -1,22 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Goods"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Goods">
 
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sample_goods_image" />
+    <ImageView
+        android:id="@+id/goods_photo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/Height_goods"
+        android:scaleType="fitCenter" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/goods_name"
+        android:layout_below="@id/goods_photo" />
 
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/goods_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goods_name" />
+
+    <TextView
+        android:id="@+id/goods_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goods_price" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="clip_horizontal">
+
+        <Button
+            android:id="@+id/goods_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/G_star"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/goods_hate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/G_hate"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/goods_shop"
+            android:text="@string/G_shop"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/goods_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/G_cart"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

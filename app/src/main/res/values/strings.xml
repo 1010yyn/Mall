@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">Mall</string>
 
+    <!--购物车-->
     <string name="Cart">购物车</string>
     <string name="Delete">删除</string>
     <string name="Confirm">确定</string>
     <string name="Calculate">结算</string>
-    <string name="Sum">合计：￥"</string>
 
+    <!--主页-->
     <string name="C_fd">食品</string>//食物分类
     <string name="C_cls">衣饰</string>//衣饰分类
     <string name="C_fur">家居</string>//家居分类
@@ -14,18 +15,27 @@
     <string name="C_mkup">美妆</string>//美妆分类
     <string name="C_exc">运动</string>//运动分类
 
+    <!--主页导航栏-->
     <string name="N_home">主页</string>//导航栏——主页
     <string name="N_cart">购物车</string>//导航栏——购物车
 
+    <!--侧边栏菜单-->
     <string name="M_info_user">个人信息</string>//侧边栏菜单——用户信息
     <string name="M_info_app">软件信息</string>//侧边栏菜单——软件信息
     <string name="M_change_user">切换用户</string>//侧边栏菜单——切换用户
     <string name="M_quit">退出</string>//侧边栏菜单——退出
 
+    <!--个人信息-->
     <string name="I_U_name">用户名</string>//个人信息——用户名
     <string name="I_U_nickname">用户昵称</string>//个人信息——昵称
     <string name="I_U_phone">手机号码</string>//个人信息——手机号码
     <string name="I_U_address">收货地址</string>//个人信息——收货地址
     <string name="I_U_info_change">修改信息</string>//个人信息——修改地址
+
+    <!--商品信息-->
+    <string name="G_star">加入收藏夹</string>
+    <string name="G_hate">加入黑名单</string>
+    <string name="G_cart">加入购物车</string>
+    <string name="G_shop">进入店铺</string>
 
 </resources>

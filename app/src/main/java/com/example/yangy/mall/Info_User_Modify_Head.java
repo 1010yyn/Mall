@@ -101,4 +101,10 @@ public class Info_User_Modify_Head extends AppCompatActivity {
         });
         ok.create().show();
     }
+
+    public void onBackPressed() {
+        Log.i(TAG, "点击返回键");
+        finish();
+    }
+
 }
