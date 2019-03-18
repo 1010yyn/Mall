@@ -30,6 +30,7 @@ public class Shop extends AppCompatActivity {
     private String Name;
 
     private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
+    private CreateData createData = new CreateData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class Shop extends AppCompatActivity {
         Name = bundle.getString("name");
 
         //TODO——根据Name检索店铺信息
-        getdata();
+        data_cart_bean = createData.getdata(this.getBaseContext());
 
         star = findViewById(R.id.shop_star);
         hate = findViewById(R.id.shop_hate);
@@ -69,9 +70,7 @@ public class Shop extends AppCompatActivity {
         final Goods_Item_adapter adapter = new Goods_Item_adapter(list);
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.cart_divider));
         list_goods.addItemDecoration(divider);
-
         list_goods.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -89,58 +88,10 @@ public class Shop extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
-
-
-    }
-
-    private void getdata() {
-        String Head_Name = "head1";
-
-        //临时存储信息
-        Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
-        Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
-        List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
-        List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean>();//临时店铺列表
-
-        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
-        //设置商品3信息
-        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setShopname("另一家店");
-        goods_bean.setName("324");
-        goods_bean.setPrice(123);
-        goods_bean.setSum(1);
-        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
-        goods_bean.setDescription("商品3");
-        //添加商品至临时商品列表
-        data_goods_beans.add(goods_bean);
-
-        //设置商品4信息
-        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setShopname("另一家店");
-        goods_bean.setName("793");
-        goods_bean.setPrice(432);
-        goods_bean.setSum(3);
-        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
-        goods_bean.setDescription("商品4");
-        //添加商品至临时商品列表2
-        data_goods_beans.add(goods_bean);
-
-        //设置临时商铺信息2
-        shop_bean = new Data_Cart_Bean.Data_Shop_Bean();
-        shop_bean.setName("另一家店");
-        //将商品列表加入临时店铺2
-        shop_bean.setGoodsData(data_goods_beans);
-
-        //将店铺加入临时店铺列表
-        data_shop_beans.add(shop_bean);
-
-        //将店铺列表加入购物车
-        data_cart_bean.setShopData(data_shop_beans);
     }
 
     public void onBackPressed() {
         Log.i(TAG, "点击返回键");
         finish();
     }
-
 }

@@ -34,8 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
-
-    private final static int REQUEST_CODE = 1;//请求标识
+    public final static int REQUEST_CODE = 1;//请求标识
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -44,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView head;//侧边栏用户头像
     private int Head;//侧边栏头像id
     private String Name, Head_Name;//侧边栏用户名,头像文件名
+
+    private TabHost tabHost;
 
     private Button btn_food, btn_cls, btn_mkup, btn_excs, btn_fur, btn_elc;//商品分类Button
 
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private Bundle bundle = new Bundle();
 
     private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
+    private CreateData createData = new CreateData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +99,26 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "正在跳转页面到个人信息页面");
                         startActivityForResult(intent, REQUEST_CODE);
                         break;
+                    case "收藏夹":
+                        intent = new Intent(MainActivity.this, Star.class);//为个人信息界面创建intent
+                        Log.i(TAG, "正在跳转页面到收藏夹页面");
+                        startActivity(intent);
+                        break;
+                    case "黑名单":
+                        intent = new Intent(MainActivity.this, Hate.class);//为个人信息界面创建intent
+                        Log.i(TAG, "正在跳转页面到黑名单页面");
+                        startActivity(intent);
+                        break;
                     case "软件信息":
                         Log.i(TAG, "跳转软件信息界面");
                         //TODO——切换到软件信息界面（最后做！）
                         break;
                     case "切换用户":
                         Log.i(TAG, "切换用户");
-                        //TODO——切换到用户登录界面
+                        intent = new Intent(MainActivity.this, Login.class);
+                        Log.i(TAG, "正在跳转至登陆界面");
+                        startActivity(intent);
+                        finish();
                         break;
                     case "退出":
                         Log.i(TAG, "退出App");
@@ -116,13 +131,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //选项卡
-        TabHost tabHost = findViewById(android.R.id.tabhost);
+        tabHost = findViewById(android.R.id.tabhost);
         tabHost.setup();
         inflater = LayoutInflater.from(this);
         inflater.inflate(R.layout.layout_main_home, tabHost.getTabContentView());//设置主页选项卡
         inflater.inflate(R.layout.layout_main_cart, tabHost.getTabContentView());//设置购物车选项卡
-        tabHost.addTab(tabHost.newTabSpec("layout_main_home").setIndicator("首页").setContent(R.id.left));
-        tabHost.addTab(tabHost.newTabSpec("layout_main_cart").setIndicator("购物车").setContent(R.id.right));
+        tabHost.addTab(tabHost.newTabSpec("layout_main_home").setIndicator("首页").setContent(R.id.main_left));
+        tabHost.addTab(tabHost.newTabSpec("layout_main_cart").setIndicator("购物车").setContent(R.id.main_right));
 
         //获取分类Button，设置监听
         btn_food = findViewById(R.id.Food);
@@ -187,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //TODO——获取商品列表数据
-        getdata_cart();//所有商品放置到同一个店铺中便于展示
+        data_cart_bean = createData.getdata(this.getBaseContext());//所有商品放置到同一个店铺中便于展示
         //获取主页list
         list_goods = findViewById(R.id.home_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
@@ -198,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
         final Goods_Item_adapter adapter = new Goods_Item_adapter(list);
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.cart_divider));
         list_goods.addItemDecoration(divider);
 
         list_goods.setAdapter(adapter);
@@ -222,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     protected void cart() {
 
         //TODO——获取购物车数据
-        getdata_cart();
+        data_cart_bean = createData.getdata(this.getBaseContext());
 
         //获取recycleview
         list_cart = findViewById(R.id.cart_list_shop);
@@ -234,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
         final Cart_Shop_Item_adapter adapter = new Cart_Shop_Item_adapter(list);
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.cart_divider));
         list_cart.addItemDecoration(divider);
 
         list_cart.setAdapter(adapter);
@@ -354,81 +367,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return arrays_obj;
-    }
-
-    private void getdata_cart() {
-        //临时存储信息
-        Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
-        Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
-        List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
-        List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean>();//临时店铺列表
-
-        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
-        //设置商品1信息
-        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setName("123");
-        goods_bean.setPrice(123);
-        goods_bean.setSum(1);
-        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
-        goods_bean.setDescription("商品1");
-        //添加商品至临时商品列表
-        data_goods_beans.add(goods_bean);
-
-        //设置商品2信息
-        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setShopname("一家店");
-        goods_bean.setName("541");
-        goods_bean.setPrice(432);
-        goods_bean.setSum(3);
-        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
-        goods_bean.setDescription("商品2");
-        //添加商品至临时商品列表1
-        data_goods_beans.add(goods_bean);
-
-        //设置临时商铺信息1
-        shop_bean = new Data_Cart_Bean.Data_Shop_Bean();
-        shop_bean.setName("一家店");
-        //将商品列表加入临时店铺1
-        shop_bean.setGoodsData(data_goods_beans);
-
-        //将店铺加入临时店铺列表
-        data_shop_beans.add(shop_bean);
-
-
-        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
-        //设置商品3信息
-        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setShopname("另一家店");
-        goods_bean.setName("324");
-        goods_bean.setPrice(123);
-        goods_bean.setSum(1);
-        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
-        goods_bean.setDescription("商品3");
-        //添加商品至临时商品列表
-        data_goods_beans.add(goods_bean);
-
-        //设置商品4信息
-        goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setShopname("另一家店");
-        goods_bean.setName("793");
-        goods_bean.setPrice(432);
-        goods_bean.setSum(3);
-        goods_bean.setPhoto(getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName()));
-        goods_bean.setDescription("商品4");
-        //添加商品至临时商品列表2
-        data_goods_beans.add(goods_bean);
-
-        //设置临时商铺信息2
-        shop_bean = new Data_Cart_Bean.Data_Shop_Bean();
-        shop_bean.setName("另一家店");
-        //将商品列表加入临时店铺2
-        shop_bean.setGoodsData(data_goods_beans);
-
-        //将店铺加入临时店铺列表
-        data_shop_beans.add(shop_bean);
-
-        //将店铺列表加入购物车
-        data_cart_bean.setShopData(data_shop_beans);
     }
 
     @Override

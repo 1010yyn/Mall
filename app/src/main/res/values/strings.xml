@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Mall</string>
 
+
+    <string name="Login">登录</string>
+    <string name="Register">注册</string>
+    <string name="Password">密码</string>
+
     <!--购物车-->
     <string name="Cart">购物车</string>
     <string name="Delete">删除</string>
@@ -21,6 +26,8 @@
 
     <!--侧边栏菜单-->
     <string name="M_info_user">个人信息</string>//侧边栏菜单——用户信息
+    <string name="M_star">收藏夹</string>//侧边栏菜单——收藏夹
+    <string name="M_hate">黑名单</string>//侧边栏菜单——黑名单
     <string name="M_info_app">软件信息</string>//侧边栏菜单——软件信息
     <string name="M_change_user">切换用户</string>//侧边栏菜单——切换用户
     <string name="M_quit">退出</string>//侧边栏菜单——退出
