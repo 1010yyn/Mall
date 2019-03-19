@@ -20,7 +20,6 @@ public class Info_User_Modify extends AppCompatActivity {
     private Bundle bundle = new Bundle();
     private TextView id, nickname, phone, address;
     private ImageView head;
-    private Button confirm;
     private AlertDialog.Builder ok;
     private String Head, Id, Nickname, Phone, Address;
 
@@ -47,7 +46,7 @@ public class Info_User_Modify extends AppCompatActivity {
         nickname = findViewById(R.id.info_user_modify_nickname);
         phone = findViewById(R.id.info_user_modify_phone);
         address = findViewById(R.id.info_user_modify_address);
-        confirm = findViewById(R.id.info_user_modify_confirm);
+        Button confirm = findViewById(R.id.info_user_modify_confirm);
 
         //设置原信息显示
         id.setText(Id);

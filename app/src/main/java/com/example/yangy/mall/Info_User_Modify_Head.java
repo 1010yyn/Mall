@@ -6,7 +6,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class Info_User_Modify_Head extends AppCompatActivity {
@@ -17,7 +16,6 @@ public class Info_User_Modify_Head extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle = new Bundle();
     private String choice;
-    private RadioGroup selection1, selection2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +26,8 @@ public class Info_User_Modify_Head extends AppCompatActivity {
         intent = getIntent();
 
         //获取radiogroup
-        selection1 = findViewById(R.id.head_selection1);
-        selection2 = findViewById(R.id.head_selection2);
+        RadioGroup selection1 = findViewById(R.id.head_selection1);
+        RadioGroup selection2 = findViewById(R.id.head_selection2);
         selection1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

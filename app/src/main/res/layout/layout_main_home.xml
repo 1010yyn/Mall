@@ -4,83 +4,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:id="@+id/search_bar"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></SearchView>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/Food"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/search_bar"
-        android:layout_margin="2dp"
-        android:background="@drawable/c_fd"
-        android:text="@string/C_fd"
-        android:textSize="20sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/Clothes"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/search_bar"
-        android:layout_margin="2dp"
-        android:layout_toEndOf="@id/Food"
-        android:layout_toRightOf="@id/Food"
-        android:background="@drawable/c_cls"
-        android:text="@string/C_cls"
-        android:textSize="20sp" />
+            <SearchView
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></SearchView>
 
-    <Button
-        android:id="@+id/Makeup"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/search_bar"
-        android:layout_margin="2dp"
-        android:layout_toEndOf="@id/Clothes"
-        android:layout_toRightOf="@id/Clothes"
-        android:background="@drawable/c_mkup"
-        android:text="@string/C_mkup"
-        android:textSize="20sp" />
+            <Button
+                android:id="@+id/Food"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_bar"
+                android:layout_margin="2dp"
+                android:background="@drawable/c_fd"
+                android:text="@string/C_fd"
+                android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/Exercise"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Food"
-        android:layout_margin="2dp"
-        android:background="@drawable/c_excs"
-        android:text="@string/C_exc"
-        android:textSize="20sp" />
+            <Button
+                android:id="@+id/Clothes"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_bar"
+                android:layout_margin="2dp"
+                android:layout_toEndOf="@id/Food"
+                android:layout_toRightOf="@id/Food"
+                android:background="@drawable/c_cls"
+                android:text="@string/C_cls"
+                android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/Furniture"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Clothes"
-        android:layout_margin="2dp"
-        android:layout_toEndOf="@id/Exercise"
-        android:layout_toRightOf="@id/Exercise"
-        android:background="@drawable/c_fur"
-        android:text="@string/C_fur"
-        android:textSize="20sp" />
+            <Button
+                android:id="@+id/Makeup"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_bar"
+                android:layout_margin="2dp"
+                android:layout_toEndOf="@id/Clothes"
+                android:layout_toRightOf="@id/Clothes"
+                android:background="@drawable/c_mkup"
+                android:text="@string/C_mkup"
+                android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/Electronic"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Makeup"
-        android:layout_margin="2dp"
-        android:layout_toEndOf="@id/Furniture"
-        android:layout_toRightOf="@id/Furniture"
-        android:background="@drawable/c_elc"
-        android:text="@string/C_elc"
-        android:textSize="20sp" />
+            <Button
+                android:id="@+id/Exercise"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Food"
+                android:layout_margin="2dp"
+                android:background="@drawable/c_excs"
+                android:text="@string/C_exc"
+                android:textSize="20sp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/home_list"
-        android:layout_below="@id/Electronic"></android.support.v7.widget.RecyclerView>
+            <Button
+                android:id="@+id/Furniture"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Clothes"
+                android:layout_margin="2dp"
+                android:layout_toEndOf="@id/Exercise"
+                android:layout_toRightOf="@id/Exercise"
+                android:background="@drawable/c_fur"
+                android:text="@string/C_fur"
+                android:textSize="20sp" />
 
+            <Button
+                android:id="@+id/Electronic"
+                android:layout_width="119dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Makeup"
+                android:layout_margin="2dp"
+                android:layout_toEndOf="@id/Furniture"
+                android:layout_toRightOf="@id/Furniture"
+                android:background="@drawable/c_elc"
+                android:text="@string/C_elc"
+                android:textSize="20sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/home_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Electronic"></android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

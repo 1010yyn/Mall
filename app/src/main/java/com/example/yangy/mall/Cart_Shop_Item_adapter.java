@@ -1,7 +1,6 @@
 package com.example.yangy.mall;
 
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -13,11 +12,10 @@ import java.util.List;
 
 public class Cart_Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHolder> {
 
-    public static final int ITEM_TITLE = 1;
-    public static final int ITEM_CONTENT = 2;
-    private CheckBox checkBox;
+    private static final int ITEM_TITLE = 1;
+    private static final int ITEM_CONTENT = 2;
 
-    public Cart_Shop_Item_adapter(@Nullable List<Object> data) {
+    Cart_Shop_Item_adapter(@Nullable List<Object> data) {
         super(data);
         // 第一步：动态判断
         setMultiTypeDelegate(new MultiTypeDelegate<Object>() {
@@ -59,7 +57,7 @@ public class Cart_Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHol
                         //给商品图片和商品名称添加子项单击事件
                         .addOnClickListener(R.id.cart_shop_goods__name)
                         .addOnClickListener(R.id.cart_shop_goods__photo);
-                checkBox = helper.getView(R.id.cart_shop_goods__selection);
+                CheckBox checkBox = helper.getView(R.id.cart_shop_goods__selection);
                 checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

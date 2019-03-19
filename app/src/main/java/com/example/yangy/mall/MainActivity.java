@@ -1,10 +1,11 @@
 package com.example.yangy.mall;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +16,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,19 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private LayoutInflater inflater;
     private TextView name;//侧边栏用户昵称
     private ImageView head;//侧边栏用户头像
-    private int Head;//侧边栏头像id
-    private String Name, Head_Name;//侧边栏用户名,头像文件名
 
-    private TabHost tabHost;
-
-    private Button btn_food, btn_cls, btn_mkup, btn_excs, btn_fur, btn_elc;//商品分类Button
-
-    private RecyclerView list_goods, list_cart;//主页和购物车的商品列表
     private AlertDialog.Builder delete_cart;//确认删除购物车商品对话框
-    private Button delete_goods, calculate_goods;//购物车商品批量删除，购物车商品结算
+    private Button delete_goods;
 
     private Intent intent;
     private Bundle bundle = new Bundle();
@@ -77,17 +68,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.layout_main);
 
         //TODO——获取用户头像和昵称
-        Name = "啊哦";
-        Head_Name = "head5";
-        Head = getResources().getIdentifier(Head_Name, "drawable", getBaseContext().getPackageName());
+        String name1 = "啊哦";
+        //侧边栏用户名,头像文件名
+        String head_Name = "head5";
+        //侧边栏头像id
+        int head1 = getResources().getIdentifier(head_Name, "drawable", getBaseContext().getPackageName());
 
         //侧边栏
         drawerLayout = findViewById(R.id.main_page);
         navigationView = findViewById(R.id.nav);
         head = navigationView.getHeaderView(0).findViewById(R.id.header_head);
         name = navigationView.getHeaderView(0).findViewById(R.id.header_name);
-        name.setText(Name);
-        head.setImageResource(Head);
+        name.setText(name1);
+        head.setImageResource(head1);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -131,21 +124,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //选项卡
-        tabHost = findViewById(android.R.id.tabhost);
+        TabHost tabHost = findViewById(android.R.id.tabhost);
         tabHost.setup();
-        inflater = LayoutInflater.from(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
         inflater.inflate(R.layout.layout_main_home, tabHost.getTabContentView());//设置主页选项卡
         inflater.inflate(R.layout.layout_main_cart, tabHost.getTabContentView());//设置购物车选项卡
         tabHost.addTab(tabHost.newTabSpec("layout_main_home").setIndicator("首页").setContent(R.id.main_left));
         tabHost.addTab(tabHost.newTabSpec("layout_main_cart").setIndicator("购物车").setContent(R.id.main_right));
 
         //获取分类Button，设置监听
-        btn_food = findViewById(R.id.Food);
-        btn_cls = findViewById(R.id.Clothes);
-        btn_mkup = findViewById(R.id.Makeup);
-        btn_excs = findViewById(R.id.Exercise);
-        btn_fur = findViewById(R.id.Furniture);
-        btn_elc = findViewById(R.id.Electronic);
+        Button btn_food = findViewById(R.id.Food);
+        Button btn_cls = findViewById(R.id.Clothes);
+        Button btn_mkup = findViewById(R.id.Makeup);
+        Button btn_excs = findViewById(R.id.Exercise);
+        Button btn_fur = findViewById(R.id.Furniture);
+        //商品分类Button
+        Button btn_elc = findViewById(R.id.Electronic);
         btn_food.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,10 +195,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        search();//搜索栏
+
         //TODO——获取商品列表数据
         data_cart_bean = createData.getdata(this.getBaseContext());//所有商品放置到同一个店铺中便于展示
         //获取主页list
-        list_goods = findViewById(R.id.home_list);
+        RecyclerView list_goods = findViewById(R.id.home_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean);
         //创建布局管理
@@ -214,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         list_goods.addItemDecoration(divider);
+        list_goods.setFocusable(false);//解决数据加载完成后, 没有停留在顶部的问题
 
         list_goods.setAdapter(adapter);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -231,6 +228,39 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+
+    protected void search() {
+        final SearchView searchView = findViewById(R.id.search_bar);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus(); // 不获取焦点
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+                    imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+                }
+                Log.i(TAG, "进行搜索，关键词为：" + query);
+                intent = new Intent(MainActivity.this, Show_result.class);//跳转到搜索结果页
+                intent.putExtra("name", query);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String selection = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY + " LIKE '%" + newText + "%' " + " OR "
+                        + ContactsContract.RawContacts.SORT_KEY_PRIMARY + " LIKE '%" + newText + "%' ";
+                // String[] selectionArg = { queryText };
+                //mCursor = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, PROJECTION, selection, null, null);
+                //mAdapter.swapCursor(mCursor); // 交换指针，展示新的数据
+                return true;
+            }
+        });
     }
 
     protected void cart() {
@@ -239,7 +269,8 @@ public class MainActivity extends AppCompatActivity {
         data_cart_bean = createData.getdata(this.getBaseContext());
 
         //获取recycleview
-        list_cart = findViewById(R.id.cart_list_shop);
+        //主页和购物车的商品列表
+        RecyclerView list_cart = findViewById(R.id.cart_list_shop);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = sortData(data_cart_bean);
         //创建布局管理
@@ -309,7 +340,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         delete_goods = findViewById(R.id.cart_delete);
-        calculate_goods = findViewById(R.id.cart_calculate);
+        //购物车商品批量删除，购物车商品结算
+        Button calculate_goods = findViewById(R.id.cart_calculate);
 
         delete_goods.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -385,4 +417,5 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         finish();
     }
+
 }

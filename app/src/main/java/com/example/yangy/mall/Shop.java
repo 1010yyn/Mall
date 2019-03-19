@@ -1,7 +1,6 @@
 package com.example.yangy.mall;
 
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,10 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Shop extends AppCompatActivity {
@@ -22,29 +18,24 @@ public class Shop extends AppCompatActivity {
     private final static int REQUEST_CODE = 6;//请求标识
 
     private Bundle bundle = new Bundle();
-    private Intent intent, intent1;
+    private Intent intent1;
 
-    private Button star, hate;
-    private RecyclerView list_goods;
-
-    private String Name;
-
-    private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
     private CreateData createData = new CreateData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_shop);
-        intent = getIntent();
+        Intent intent = getIntent();
         bundle = intent.getExtras();
-        Name = bundle.getString("name");
+        String name = bundle.getString("name");
 
         //TODO——根据Name检索店铺信息
-        data_cart_bean = createData.getdata(this.getBaseContext());
+        //网络请求成功返回的OpenRecordBean对象
+        Data_Cart_Bean data_cart_bean = createData.getdata(this.getBaseContext());
 
-        star = findViewById(R.id.shop_star);
-        hate = findViewById(R.id.shop_hate);
+        Button star = findViewById(R.id.shop_star);
+        Button hate = findViewById(R.id.shop_hate);
 
         star.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +52,7 @@ public class Shop extends AppCompatActivity {
         });
 
         //获取recycleview
-        list_goods = findViewById(R.id.shop_list);
+        RecyclerView list_goods = findViewById(R.id.shop_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean);
         //创建布局管理

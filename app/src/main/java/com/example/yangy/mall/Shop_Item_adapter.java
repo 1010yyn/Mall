@@ -10,10 +10,10 @@ import java.util.List;
 
 public class Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHolder> {
 
-    public static final int ITEM_TITLE = 1;
-    public static final int ITEM_CONTENT = 2;
+    private static final int ITEM_TITLE = 1;
+    private static final int ITEM_CONTENT = 2;
 
-    public Shop_Item_adapter(@Nullable List<Object> data) {
+    Shop_Item_adapter(@Nullable List<Object> data) {
         super(data);
         // 第一步：动态判断
         setMultiTypeDelegate(new MultiTypeDelegate<Object>() {

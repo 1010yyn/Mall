@@ -14,8 +14,7 @@ public class Info_User extends AppCompatActivity {
     private final static String TAG = "MYTAG";
     public final static int REQUEST_CODE = 2;//请求标识
 
-    private Button modify;
-    private Intent intent1, intent2;
+    private Intent intent2;
     private Bundle bundle = new Bundle();
     private TextView id, nickname, phone, address;
     private ImageView head;
@@ -52,7 +51,7 @@ public class Info_User extends AppCompatActivity {
         bundle.putCharSequence("head", Head);
 
         //修改用户信息
-        modify = findViewById(R.id.info_user_info_change);
+        Button modify = findViewById(R.id.info_user_info_change);
         modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +89,7 @@ public class Info_User extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Log.i(TAG, "点击返回键");
-        intent1 = new Intent(Info_User.this, MainActivity.class);
+        Intent intent1 = new Intent(Info_User.this, MainActivity.class);
         setResult(REQUEST_CODE, intent1.putExtras(bundle));
         finish();
     }

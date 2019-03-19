@@ -4,7 +4,6 @@ import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,13 +23,8 @@ public class Hate extends TabActivity {
     private String TAG = "MYTAG";
     public final static int REQUEST_CODE = 9;//请求标识
 
-    private Intent intent, intent1;
+    private Intent intent1;
     private Bundle bundle = new Bundle();
-
-    private TabHost tabHost;
-
-    private RecyclerView list_goods;
-    private RecyclerView list_shop;
 
     private AlertDialog.Builder delete;
 
@@ -41,10 +35,10 @@ public class Hate extends TabActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        intent = getIntent();
+        Intent intent = getIntent();
         bundle = intent.getExtras();
 
-        tabHost = getTabHost();
+        TabHost tabHost = getTabHost();
         LayoutInflater.from(this).inflate(R.layout.layout_hate, tabHost.getTabContentView(), true);
         tabHost.addTab(tabHost.newTabSpec("layout_hate_goods").setIndicator("商品").setContent(R.id.hate_tab__goods));
         tabHost.addTab(tabHost.newTabSpec("layout_hate_shop").setIndicator("商店").setContent(R.id.hate_tab__shop));
@@ -57,7 +51,7 @@ public class Hate extends TabActivity {
 
     private void add_goods() {
         //获取recycleview
-        list_goods = findViewById(R.id.hate__goods_list);
+        RecyclerView list_goods = findViewById(R.id.hate__goods_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean);
         //创建布局管理
@@ -117,7 +111,7 @@ public class Hate extends TabActivity {
 
     private void add_shop() {
         //获取recycleview
-        list_shop = findViewById(R.id.hate__shop_list);
+        RecyclerView list_shop = findViewById(R.id.hate__shop_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean);
         //创建布局管理

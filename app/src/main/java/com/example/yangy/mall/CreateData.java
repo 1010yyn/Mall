@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CreateData extends AppCompatActivity {
 
     //TODO——获取商店数据
@@ -23,12 +22,13 @@ public class CreateData extends AppCompatActivity {
         Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
         Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
         List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
-        List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean>();//临时店铺列表
+        List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
 
-        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
+        data_goods_beans = new ArrayList<>();
         //设置商品1信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-        goods_bean.setName("123");
+        goods_bean.setShopname("一家店");
+        goods_bean.setName("一块西瓜");
         goods_bean.setPrice(123);
         goods_bean.setSum(1);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -39,7 +39,7 @@ public class CreateData extends AppCompatActivity {
         //设置商品2信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("一家店");
-        goods_bean.setName("541");
+        goods_bean.setName("另一块西瓜");
         goods_bean.setPrice(432);
         goods_bean.setSum(3);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -57,11 +57,11 @@ public class CreateData extends AppCompatActivity {
         data_shop_beans.add(shop_bean);
 
 
-        data_goods_beans = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
+        data_goods_beans = new ArrayList<>();
         //设置商品3信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("另一家店");
-        goods_bean.setName("324");
+        goods_bean.setName("还有一块西瓜");
         goods_bean.setPrice(123);
         goods_bean.setSum(1);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -72,7 +72,7 @@ public class CreateData extends AppCompatActivity {
         //设置商品4信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("另一家店");
-        goods_bean.setName("793");
+        goods_bean.setName("最后一块西瓜");
         goods_bean.setPrice(432);
         goods_bean.setSum(3);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));

@@ -6,11 +6,11 @@ import java.util.List;
 public class Data_Cart_Bean {
     private List<Data_Shop_Bean> data;//店铺列表
 
-    public List<Data_Shop_Bean> getShopData() {
+    List<Data_Shop_Bean> getShopData() {
         return data;
     }
 
-    public void setShopData(List<Data_Shop_Bean> data) {
+    void setShopData(List<Data_Shop_Bean> data) {
         this.data = data;
     }
 
@@ -40,11 +40,11 @@ public class Data_Cart_Bean {
             this.amount = amount;
         }
 
-        public List<Data_Goods_Bean> getGoodsData() {
+        List<Data_Goods_Bean> getGoodsData() {
             return data;
         }
 
-        public void setGoodsData(List<Data_Goods_Bean> data) {
+        void setGoodsData(List<Data_Goods_Bean> data) {
             this.data = data;
         }
 
@@ -63,11 +63,11 @@ public class Data_Cart_Bean {
                 isSelected = false;
             }
 
-            public String getShopname() {
+            String getShopname() {
                 return shopname;
             }
 
-            public void setShopname(String shopname) {
+            void setShopname(String shopname) {
                 this.shopname = shopname;
             }
 
@@ -79,43 +79,43 @@ public class Data_Cart_Bean {
                 this.name = name;
             }
 
-            public String getPrice() {
+            String getPrice() {
                 return Integer.toString(price);
             }
 
-            public void setPrice(int price) {
+            void setPrice(int price) {
                 this.price = price;
             }
 
-            public String getSum() {
+            String getSum() {
                 return Integer.toString(sum);
             }
 
-            public void setSum(int sum) {
+            void setSum(int sum) {
                 this.sum = sum;
             }
 
-            public int getPhoto() {
+            int getPhoto() {
                 return photo;
             }
 
-            public void setPhoto(int photo) {
+            void setPhoto(int photo) {
                 this.photo = photo;
             }
 
-            public boolean getStatus() {
+            boolean getStatus() {
                 return isSelected;
             }
 
-            public void setStatus(boolean status) {
+            void setStatus(boolean status) {
                 isSelected = status;
             }
 
-            public void setDescription(String description) {
+            void setDescription(String description) {
                 this.description = description;
             }
 
-            public String getDescription() {
+            String getDescription() {
                 return description;
             }
         }
