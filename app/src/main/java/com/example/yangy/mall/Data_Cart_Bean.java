@@ -1,9 +1,11 @@
 package com.example.yangy.mall;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 //OpenRecordBean
-public class Data_Cart_Bean {
+public class Data_Cart_Bean extends JSONObject {
     private List<Data_Shop_Bean> data;//店铺列表
 
     List<Data_Shop_Bean> getShopData() {
