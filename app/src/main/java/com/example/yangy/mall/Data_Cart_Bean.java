@@ -50,7 +50,6 @@ public class Data_Cart_Bean extends JSONObject {
             this.data = data;
         }
 
-
         //LogDOListBean
         public static class Data_Goods_Bean {
             private String shopname;//商店名称

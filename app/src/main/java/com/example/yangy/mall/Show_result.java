@@ -31,12 +31,10 @@ public class Show_result extends AppCompatActivity {
         setContentView(R.layout.layout_show_result);
         Intent intent = getIntent();
         bundle = intent.getExtras();
-        String str = bundle.getString("str");
-        Log.i(TAG, "成功跳转到搜索结果页面，本次搜索关键词为：" + str);
+        String key = bundle.getString("str");
+        Log.i(TAG, "成功跳转到搜索结果页面，本次搜索关键词为：" + key);
         //TODO——根据关键词检索数据库
-
-        search();
-
+        search(key);
 
         //示例数据
         Data_Cart_Bean data_cart_bean = createData.getdata(this.getBaseContext());
@@ -71,7 +69,7 @@ public class Show_result extends AppCompatActivity {
         });
     }
 
-    protected void search() {
+    protected void search(String key) {
         final SearchView searchView = findViewById(R.id.result_search_bar);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -85,6 +83,7 @@ public class Show_result extends AppCompatActivity {
                 }
                 Log.i(TAG, "进行搜索，关键词为：" + query);
                 //TODO——搜索，然后刷新list
+
                 return true;
             }
 
