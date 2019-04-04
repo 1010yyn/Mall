@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,12 +17,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +46,8 @@ public class CreateData extends Activity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    getwebinfo();//把路径选到MainActivity中
+                    //getwebinfo();//把路径选到MainActivity中
+                    post("hello world");//test
                 }
             }).start();
         } catch (Exception e) {
@@ -125,6 +129,43 @@ public class CreateData extends Activity {
         //将店铺列表加入购物车
         data_cart_bean.setShopData(data_shop_beans);
         return data_cart_bean;
+    }
+
+    private void post(String req) {
+        String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";
+        URL url = null;
+        try {
+            url = new URL(strUrl);
+            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            urlConn.setDoInput(true);//设置输入流采用字节流
+            urlConn.setDoOutput(true);//设置输出流采用字节流
+            urlConn.setRequestMethod("POST");
+            urlConn.setUseCaches(false);//设置缓存
+            urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+            urlConn.setRequestProperty("Charset", "utf-8");
+
+            urlConn.connect();//连接，往服务端发送消息
+
+            DataOutputStream dop = new DataOutputStream(urlConn.getOutputStream());
+            dop.writeBytes("param=" + URLEncoder.encode(req, "utf-8"));//发送参数
+            dop.flush();//发送，清空缓存
+            dop.close();//关闭
+
+            //InputStreamReader in = new InputStreamReader(urlConn.getInputStream());//向服务器发送消息
+            //BufferedReader bufferedReader = new BufferedReader(in);
+            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+            String result = "";
+            String readLine = null;
+            while ((readLine = bufferReader.readLine()) != null) {
+                result += readLine;
+            }
+            //in.close();
+            bufferReader.close();
+            urlConn.disconnect();//关闭连接
+            Log.i(TAG, result);
+        } catch (Exception e) {
+            Log.e(TAG, "连接失败" + e.getMessage());
+        }
     }
 
     private void getwebinfo() {
