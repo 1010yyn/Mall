@@ -46,7 +46,7 @@ public class Goods_Item_adapter extends BaseQuickAdapter<Object, BaseViewHolder>
                 break;
             case ITEM_CONTENT:
                 //填充商品内容
-                helper.setText(R.id.shop_goods__name, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getName())
+                helper.setText(R.id.shop_goods__name, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getGoodsname())
                         .setText(R.id.shop_goods__price, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPrice())
                         .setText(R.id.shop_goods__sum, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getSum())
                         .setImageResource(R.id.shop_goods__photo, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPhoto());

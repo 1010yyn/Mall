@@ -3,6 +3,8 @@ package com.example.yangy.mall;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,6 +29,10 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
     public final static int REQUEST_CODE = 1;//请求标识
+
+    public static int idOfuser = 1;//默认设置为0，等待用户登录
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -49,12 +57,17 @@ public class MainActivity extends AppCompatActivity {
     private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
     private CreateData createData = new CreateData();
 
+    private Handler handler = new Handler() {
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.i(TAG, "开屏");
         setContentView(R.layout.layout_start);
-        //TODO——welcomeactivity切换
+        //TODO——welcomeactivity切换handler??
         Log.i(TAG, "开屏停留3s");
         //TODO——链接数据库，加载主界面内容
         Log.i(TAG, "链接数据库");
@@ -219,7 +232,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "单击商品");
                 intent = new Intent(MainActivity.this, Goods.class);
                 bundle = new Bundle();//清空数据
-                bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getName());
+                //new
+                bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
+                bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                bundle.putCharSequence("goods_name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsname());
+                bundle.putCharSequence("shop_name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
+
+                //old
+                bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsname());
                 bundle.putInt("photo", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPhoto());
                 bundle.putCharSequence("price", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPrice());
                 bundle.putCharSequence("description", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getDescription());
@@ -228,9 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
-
 
     protected void search() {
         final SearchView searchView = findViewById(R.id.search_bar);
@@ -268,8 +286,16 @@ public class MainActivity extends AppCompatActivity {
         //TODO——获取购物车数据
         data_cart_bean = createData.getdata(this.getBaseContext());
 
+        JSONObject req = new JSONObject();
+        try {
+            req.put("type", "CG");
+            req.put("id", idOfuser + "");
+            getCart(req);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
         //获取recycleview
-        //主页和购物车的商品列表
         RecyclerView list_cart = findViewById(R.id.cart_list_shop);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = sortData(data_cart_bean);
@@ -299,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "单击购物车商品" + position);
                         intent = new Intent(MainActivity.this, Goods.class);//为商品结果界面创建intent
                         bundle = new Bundle();//清空数据
-                        bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getName());
+                        bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsname());
                         bundle.putInt("photo", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPhoto());
                         bundle.putCharSequence("price", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPrice());
                         bundle.putCharSequence("description", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getDescription());
@@ -362,6 +388,34 @@ public class MainActivity extends AppCompatActivity {
                 delete_goods.performClick();//删除订单中的商品
             }
         });
+
+    }
+
+    protected void getCart(final JSONObject req) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String rst = createData.post(req);
+                Log.i(TAG, "购物车商品id列表" + rst);
+                try {
+                    JSONObject cart = new JSONObject(rst);//获取商品简略列表（shop_id,goods_id）
+                    JSONObject goods = new JSONObject();//存储查询商品简略信息
+                    ArrayList<JSONObject> Cart = new ArrayList<JSONObject>();//购物车商品列表
+                    JSONObject req_g;//新查询商品请求
+                    //TODO——分离多组数据
+                    int i = 0;
+                    while (cart.getString("goods_id" + i) != null) {
+                        req_g = new JSONObject();
+                        //TODO——继续完善
+
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "解析购物车数据错误" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
     }
 

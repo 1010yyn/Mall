@@ -2,57 +2,26 @@ package com.example.yangy.mall;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CreateData extends Activity {
 
     private String TAG = "MYTAG";
-    private boolean isNextPage;
-    private List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data = new ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean>();
-    //TODO——获取商店数据
-    //TODO——获取用户个人信息
-    //TODO——获取收藏夹信息
-    //TODO——获取黑名单信息
 
     //获取商店数据
     public Data_Cart_Bean getdata(Context context) {
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //getwebinfo();//把路径选到MainActivity中
-                    post("hello world");//test
-                }
-            }).start();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
         String Head_Name = "head3";
         Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
 
@@ -66,7 +35,9 @@ public class CreateData extends Activity {
         //设置商品1信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("一家店");
-        goods_bean.setName("一块西瓜");
+        goods_bean.setShopid("1");
+        goods_bean.setGoodsname("一块西瓜");
+        goods_bean.setGoodsid("1");
         goods_bean.setPrice(123);
         goods_bean.setSum(1);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -77,7 +48,9 @@ public class CreateData extends Activity {
         //设置商品2信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("一家店");
-        goods_bean.setName("另一块西瓜");
+        goods_bean.setShopid("1");
+        goods_bean.setGoodsname("另一块西瓜");
+        goods_bean.setGoodsid("2");
         goods_bean.setPrice(432);
         goods_bean.setSum(3);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -88,6 +61,7 @@ public class CreateData extends Activity {
         //设置临时商铺信息1
         shop_bean = new Data_Cart_Bean.Data_Shop_Bean();
         shop_bean.setName("一家店");
+        shop_bean.setId("1");
         //将商品列表加入临时店铺1
         shop_bean.setGoodsData(data_goods_beans);
 
@@ -98,7 +72,9 @@ public class CreateData extends Activity {
         //设置商品3信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("另一家店");
-        goods_bean.setName("还有一块西瓜");
+        goods_bean.setShopid("2");
+        goods_bean.setGoodsname("还有一块西瓜");
+        goods_bean.setGoodsid("1");
         goods_bean.setPrice(123);
         goods_bean.setSum(1);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -109,7 +85,9 @@ public class CreateData extends Activity {
         //设置商品4信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
         goods_bean.setShopname("另一家店");
-        goods_bean.setName("最后一块西瓜");
+        goods_bean.setShopid("2");
+        goods_bean.setGoodsname("最后一块西瓜");
+        goods_bean.setGoodsid("2");
         goods_bean.setPrice(432);
         goods_bean.setSum(3);
         goods_bean.setPhoto(context.getResources().getIdentifier(Head_Name, "drawable", context.getPackageName()));
@@ -131,9 +109,11 @@ public class CreateData extends Activity {
         return data_cart_bean;
     }
 
-    private void post(String req) {
+    //get数据
+    public String post(JSONObject req) {
         String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";
-        URL url = null;
+        String result = "";
+        URL url;
         try {
             url = new URL(strUrl);
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
@@ -144,61 +124,32 @@ public class CreateData extends Activity {
             urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
             urlConn.setRequestProperty("Charset", "utf-8");
 
+            Log.i(TAG, "尝试连接");
             urlConn.connect();//连接，往服务端发送消息
 
             DataOutputStream dop = new DataOutputStream(urlConn.getOutputStream());
-            dop.writeBytes("param=" + URLEncoder.encode(req, "utf-8"));//发送参数
+            dop.writeBytes("param=" + URLEncoder.encode(req.toString(), "utf-8"));//发送参数
             dop.flush();//发送，清空缓存
             dop.close();//关闭
 
-            //InputStreamReader in = new InputStreamReader(urlConn.getInputStream());//向服务器发送消息
-            //BufferedReader bufferedReader = new BufferedReader(in);
+            //接收返回数据
             BufferedReader bufferReader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            String result = "";
-            String readLine = null;
+            String readLine;
             while ((readLine = bufferReader.readLine()) != null) {
                 result += readLine;
             }
-            //in.close();
             bufferReader.close();
             urlConn.disconnect();//关闭连接
-            Log.i(TAG, result);
+            result = URLDecoder.decode(result, "UTF-8");//解码数据
+            if (req.getString("type").equals("CG"))//获取购物车数据开头结尾加上括号，以便转换成json
+                result = "{" + result.substring(0, result.length() - 1) + "}";
+            Log.i(TAG, "result:" + result);
         } catch (Exception e) {
             Log.e(TAG, "连接失败" + e.getMessage());
+            return "false";
         }
+        return result;
     }
 
-    private void getwebinfo() {
-        try {
-            //1,找水源--创建URL
-            //URL url = new URL("http://192.168.43.110:8080/MyServer/server_servlet");//放网站
-            URL url = new URL("https://www.baidu.com");
-            //2,开水闸--openConnection
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            //3，建管道--InputStream
-            InputStream inputStream = httpURLConnection.getInputStream();
-            //4，建蓄水池蓄水-InputStreamReader
-            InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
-            //5，水桶盛水--BufferedReader
-            BufferedReader bufferedReader = new BufferedReader(reader);
-
-            StringBuffer buffer = new StringBuffer();
-            String temp = null;
-
-            while ((temp = bufferedReader.readLine()) != null) {
-                //取水--如果不为空就一直取
-                buffer.append(temp);
-            }
-            bufferedReader.close();//记得关闭
-            reader.close();
-            inputStream.close();
-            Log.e(TAG, buffer.toString());//打印结果
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    //TODO——get图片
 }

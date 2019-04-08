@@ -2,6 +2,8 @@ package com.example.yangy.mall;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +12,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Info_User_Modify extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
     public final static int REQUEST_CODE = 3;//请求标识
+    private static int UPDATE_OK = 1;
+    private static int UPDATE_ERROR = 0;
 
     private Intent intent1, intent2;
     private Bundle bundle = new Bundle();
@@ -23,6 +31,23 @@ public class Info_User_Modify extends AppCompatActivity {
     private AlertDialog.Builder ok;
     private String Head, Id, Nickname, Phone, Address;
 
+    private CreateData getdata = new CreateData();
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == UPDATE_OK) {
+                Toast.makeText(Info_User_Modify.this, "修改成功！", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "个人信息修改成功");
+            } else if (msg.what == UPDATE_ERROR) {
+                Toast.makeText(Info_User_Modify.this, "修改失败！", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "个人信息修改失败");
+            }
+            setResult(3, intent1.putExtras(bundle));
+            finish();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +55,6 @@ public class Info_User_Modify extends AppCompatActivity {
         setContentView(R.layout.layout_info__user__modify);
         intent1 = getIntent();
         bundle = intent1.getExtras();
-
         Log.i(TAG, "成功跳转信息修改界面");
 
         //获取个人信息界面信息，填充至修改界面
@@ -91,14 +115,36 @@ public class Info_User_Modify extends AppCompatActivity {
                         bundle.putCharSequence("phone", Phone);
                         bundle.putCharSequence("address", Address);
                         bundle.putCharSequence("head", Head);
-                        //TODO——更新数据库
-                        setResult(3, intent1.putExtras(bundle));
-                        finish();
+                        JSONObject js = new JSONObject();
+                        try {
+                            js.put("type", "UU");
+                            js.put("id", MainActivity.idOfuser + "");
+                            js.put("nick", Nickname);
+                            js.put("phone", Phone);
+                            js.put("address", Address);
+                            js.put("head", Head);
+                            update(js);
+                        } catch (Exception e) {
+                            Log.e(TAG, "update info_user error!");
+                        }
                     }
                 });
                 ok.create().show();
             }
         });
+    }
+
+    protected void update(final JSONObject req) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "试图更新信息");
+                String rst = getdata.post(req);//更新并获取数据
+                if (rst.equals("true"))//更新成功
+                    handler.sendEmptyMessage(UPDATE_OK);
+                else handler.sendEmptyMessage(UPDATE_ERROR);
+            }
+        }).start();
     }
 
     @Override

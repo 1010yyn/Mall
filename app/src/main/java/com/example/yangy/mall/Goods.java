@@ -1,6 +1,8 @@
 package com.example.yangy.mall;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,14 +10,51 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Goods extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
     private final static int REQUEST_CODE = 5;//请求标识
+    private int GET_OK = 1;
+    private int GET_ERROR = 0;
+
     private Intent intent1;
 
     private String Shop;
+
+    private String name1, price1, description1, photo1;
+
+    private String shop_id, goods_id;
+
+    private CreateData getdata = new CreateData();
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == GET_ERROR)
+                Toast.makeText(Goods.this, "加载商品信息失败！", Toast.LENGTH_SHORT);
+            else {
+                try {
+                    JSONObject goods = new JSONObject(msg.obj.toString());
+                    name1 = goods.getString("goods_name");
+                    //TODO——图片传输photo=goods.getString("photo");
+                    photo1 = "head5";
+                    price1 = goods.getString("price");
+                    description1 = goods.getString("description");
+                    set();
+                } catch (JSONException e) {
+                    Log.e(TAG, "handleMessage: 解析商品数据失败");
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,19 +62,51 @@ public class Goods extends AppCompatActivity {
         setContentView(R.layout.layout_goods);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String name1 = bundle.getString("name");
-        String price1 = bundle.getString("price");
-        String description1 = bundle.getString("description");
-        Shop = bundle.getString("shop");
-        int photo1 = bundle.getInt("photo");
-
         Log.i(TAG, "成功跳转到商品页面");
+        //TODO——get shop_id&goods_id
+        //shop_id=bundle.getString("shop_id");
+        //goods_id=bundle.getString("goods_id");
+
+        //test
+        shop_id = "2";
+        goods_id = "1";
+
+        JSONObject req = new JSONObject();
+        try {
+            req.put("type", "GG");
+            req.put("shop_id", shop_id);
+            req.put("goods_id", goods_id);
+            get(req);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+    }
+
+    private void get(final JSONObject req) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String rst = getdata.post(req);//尝试获取商品信息
+                Message msg = Message.obtain();
+                if (rst.equals("false"))//获取失败
+                    handler.sendEmptyMessage(GET_ERROR);
+                else {
+                    msg.what = GET_OK;
+                    msg.obj = rst;
+                    handler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
+    private void set() {
         ImageView photo = findViewById(R.id.goods_photo);
         TextView name = findViewById(R.id.goods_name);
         TextView price = findViewById(R.id.goods_price);
         TextView description = findViewById(R.id.goods_description);
 
-        photo.setImageResource(photo1);
+        photo.setImageResource(getResources().getIdentifier(photo1, "drawable", getBaseContext().getPackageName()));
         name.setText(name1);
         price.setText(price1);
         description.setText(description1);

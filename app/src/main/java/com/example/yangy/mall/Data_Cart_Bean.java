@@ -18,12 +18,21 @@ public class Data_Cart_Bean extends JSONObject {
 
     //DataBean
     public static class Data_Shop_Bean {
+        private String shop_id;//商店id
         private String shop_name;//店铺名称
         private int amount;//当前商店商品数量
         private List<Data_Goods_Bean> data;//商品列表
 
         Data_Shop_Bean() {
             amount = 0;
+        }
+
+        public String getId() {
+            return shop_id;
+        }
+
+        public void setId(String shop_id) {
+            this.shop_id = shop_id;
         }
 
         public String getName() {
@@ -52,8 +61,10 @@ public class Data_Cart_Bean extends JSONObject {
 
         //LogDOListBean
         public static class Data_Goods_Bean {
-            private String shopname;//商店名称
-            private String name;//商品名称
+            private String shop_name;//商店名称
+            private String shop_id;//商店id
+            private String goods_id;//商品id
+            private String goods_name;//商品名称
             private int price;//商品价格
             private int sum;//商品总数
             private int photo;//商品图片资源id
@@ -64,20 +75,36 @@ public class Data_Cart_Bean extends JSONObject {
                 isSelected = false;
             }
 
+            String getShopid() {
+                return shop_id;
+            }
+
+            void setShopid(String shop_id) {
+                this.shop_id = shop_id;
+            }
+
+            String getGoodsid() {
+                return goods_id;
+            }
+
+            void setGoodsid(String goods_id) {
+                this.goods_id = goods_id;
+            }
+
             String getShopname() {
-                return shopname;
+                return shop_name;
             }
 
             void setShopname(String shopname) {
-                this.shopname = shopname;
+                this.shop_name = shopname;
             }
 
-            public String getName() {
-                return name;
+            String getGoodsname() {
+                return goods_name;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            void setGoodsname(String name) {
+                this.goods_name = name;
             }
 
             String getPrice() {
