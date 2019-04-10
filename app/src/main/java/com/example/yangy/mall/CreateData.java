@@ -23,7 +23,7 @@ public class CreateData extends Activity {
     //获取商店数据
     public Data_Cart_Bean getdata(Context context) {
         String Head_Name = "head3";
-        Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
+        Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
         //临时存储信息
         Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
@@ -31,6 +31,7 @@ public class CreateData extends Activity {
         List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
         List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
 
+        //商店商品列表初始化
         data_goods_beans = new ArrayList<>();
         //设置商品1信息
         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
@@ -142,7 +143,7 @@ public class CreateData extends Activity {
             urlConn.disconnect();//关闭连接
             result = URLDecoder.decode(result, "UTF-8");//解码数据
             if (req.getString("type").equals("CG"))//获取购物车数据开头结尾加上括号，以便转换成json
-                result = "{" + result.substring(0, result.length() - 1) + "}";
+                result = "{" + result + "}";
             Log.i(TAG, "result:" + result);
         } catch (Exception e) {
             Log.e(TAG, "连接失败" + e.getMessage());
