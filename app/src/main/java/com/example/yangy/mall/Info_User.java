@@ -59,7 +59,7 @@ public class Info_User extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_info__user);
         Log.i(TAG, "成功跳转到个人信息页面");
-        //TODO——获取用户信息
+        //获取用户信息
         final JSONObject req = new JSONObject();
         try {
             req.put("type", "UG");

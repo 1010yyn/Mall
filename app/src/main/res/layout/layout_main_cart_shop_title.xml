@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/Margin_Cart_ShopTitle"
+    android:layout_gravity="center_vertical"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/cart_shop_title__title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
+        android:layout_height="50dp"
+        android:gravity="center_vertical" />
 </LinearLayout>

@@ -112,7 +112,7 @@ public class CreateData extends Activity {
 
     //get数据
     public String post(JSONObject req) {
-        String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";
+        String strUrl = "http://172.22.78.52:8080/MyServer/server_servlet";
         String result = "";
         URL url;
         try {
@@ -142,7 +142,7 @@ public class CreateData extends Activity {
             bufferReader.close();
             urlConn.disconnect();//关闭连接
             result = URLDecoder.decode(result, "UTF-8");//解码数据
-            if (req.getString("type").equals("CG"))//获取购物车数据开头结尾加上括号，以便转换成json
+            if (req.getString("type").equals("CG") || req.getString("type").equals("LG_G") || req.getString("type").equals("LG_S"))//获取购物车数据开头结尾加上括号，以便转换成json
                 result = "{" + result + "}";
             Log.i(TAG, "result:" + result);
         } catch (Exception e) {

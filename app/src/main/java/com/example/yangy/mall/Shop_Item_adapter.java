@@ -34,7 +34,6 @@ public class Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHolder> 
         // 第二步：设置type和layout的对应关系
         getMultiTypeDelegate().registerItemType(ITEM_CONTENT, R.layout.layout_goods_empty)
                 .registerItemType(ITEM_TITLE, R.layout.layout_main_cart_shop_title);
-
     }
 
     @Override

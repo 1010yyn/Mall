@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private int GET_CART_OK = 1;//获取购物车数据OK
     private int GET_USER_OK = 2;//获取用户头像idOK
     private int DLT_CART_OK = 3;//删除购物车数据OK
+    private int CART_EMPTY = 4;
 
     public static int idOfuser = 1;//默认设置为0，等待用户登录
 
@@ -82,12 +83,14 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject js = new JSONObject(msg.obj.toString());
                     name1 = js.getString("name");
                     head_Name = js.getString("head");
+                    setData();//加载主界面内容
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            } else if (msg.what == CART_EMPTY) {
+                data_cart_bean = null;
             }
-            //加载主界面内容
-            setData();
+
         }
     };
 
@@ -98,14 +101,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "开屏");
         setContentView(R.layout.layout_start);
         Log.i(TAG, "开屏停留3s");
-        JSONObject req = new JSONObject();
-        try {
-            req.put("type", "CG");
-            req.put("id", idOfuser + "");
-            getData(req);//获取用户数据
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
+//        JSONObject req = new JSONObject();
+//        try {
+//            req.put("type", "CG");
+//            req.put("id", idOfuser + "");
+//            getData(req);//获取用户数据
+//        } catch (Exception e) {
+//            Log.e(TAG, "加载主界面失败");
+//            e.printStackTrace();
+//        }
     }
 
     void setData() {
@@ -263,18 +267,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "单击商品");
                 intent = new Intent(MainActivity.this, Goods.class);
                 bundle = new Bundle();//清空数据
-                //new
                 bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                 bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
-                bundle.putCharSequence("goods_name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsname());
-                bundle.putCharSequence("shop_name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
-
-                //old
-                bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsname());
-                bundle.putInt("photo", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPhoto());
-                bundle.putCharSequence("price", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPrice());
-                bundle.putCharSequence("description", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getDescription());
-                bundle.putCharSequence("shop", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -343,11 +337,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "单击购物车商品" + position);
                         intent = new Intent(MainActivity.this, Goods.class);//为商品结果界面创建intent
                         bundle = new Bundle();//清空数据
-                        bundle.putCharSequence("name", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsname());
-                        bundle.putInt("photo", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPhoto());
-                        bundle.putCharSequence("price", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getPrice());
-                        bundle.putCharSequence("description", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getDescription());
-                        bundle.putCharSequence("shop", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
+                        bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
+                        bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
                         intent.putExtras(bundle);
                         startActivity(intent);
                         break;
@@ -373,28 +364,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.i(TAG, "确认删除");//删除该条记录
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                JSONObject req = new JSONObject();
-                                try {
-                                    req.put("type", "CD");
-                                    req.put("id", idOfuser + "");
-                                    req.put("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
-                                    req.put("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                String rst = createData.post(req);
-                                if (rst.equals("true")) {
-                                    handler.sendEmptyMessage(DLT_CART_OK);
-                                    //delete_cart_goods((Cart_Shop_Item_adapter) adapter, position);
-                                }
-
-                            }
-                        });
-                        //TODO——获取该条记录，从数据库删除
                         delete_cart_goods((Cart_Shop_Item_adapter) adapter, position);
                     }
                 });
@@ -403,14 +372,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //购物车商品批量删除，
         delete_goods = findViewById(R.id.cart_delete);
-        //购物车商品批量删除，购物车商品结算
-        Button calculate_goods = findViewById(R.id.cart_calculate);
-
         delete_goods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——遍历列表将选中项目一并remove
+                //遍历列表将选中项目一并remove
                 for (int i = adapter.getItemCount(); i > 0; i--) {
                     if (adapter.getItemViewType(i) == 2)//商品item
                         if (((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(i)).getStatus())//选中状态
@@ -418,7 +385,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //购物车商品结算
+        Button calculate_goods = findViewById(R.id.cart_calculate);
         calculate_goods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -426,7 +394,6 @@ public class MainActivity extends AppCompatActivity {
                 delete_goods.performClick();//删除订单中的商品
             }
         });
-
     }
 
     protected void getData(final JSONObject req) {
@@ -448,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
-                    int i = 0;
+                    int i = 0;//查询商品序号
                     while (i < cart.getInt("count")) {
                         req_g = new JSONObject();
                         req_g.put("type", "GG");
@@ -476,8 +443,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         //添加商品信息，加入商店商品列表
                         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
-                        goods_bean.setShopname(shop_bean.getName());//设定商店名称
-                        goods_bean.setShopid(shop_bean.getId());//设定商店id
+                        goods_bean.setShopname(goods.getString("shop_name"));//设定商店名称
+                        goods_bean.setShopid(goods.getString("goods_id"));//设定商店id
                         goods_bean.setGoodsname(goods.getString("goods_name"));//设定商品名称
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
@@ -488,15 +455,21 @@ public class MainActivity extends AppCompatActivity {
                         data_goods_beans.add(goods_bean);
                         i++;
                     }
-                    //当前店铺还未进行加入购物车操作，跳出循环后继续
-                    shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
-                    data_shop_beans.add(shop_bean);//将商店加入购物车列表
-                    //将所有的店铺列表加入购物车
-                    data_cart_bean.setShopData(data_shop_beans);
-                    Message msg = Message.obtain();
-                    msg.obj = data_cart_bean;
-                    msg.what = GET_CART_OK;
-                    handler.sendMessage(msg);
+                    //如果购物车非空
+                    if (cart.getInt("count") > 0) {
+                        //当前店铺还未进行加入购物车操作，跳出循环后继续
+                        shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
+                        data_shop_beans.add(shop_bean);//将商店加入购物车列表
+                        //将所有的店铺列表加入购物车
+                        data_cart_bean.setShopData(data_shop_beans);
+                        Message msg = Message.obtain();
+                        msg.obj = data_cart_bean;
+                        msg.what = GET_CART_OK;
+                        handler.sendMessage(msg);
+                    } else {
+                        handler.sendEmptyMessage(CART_EMPTY);
+                    }
+                    //获取用户信息填充头像和昵称
                     JSONObject req = new JSONObject();
                     try {
                         req.put("type", "UG");
@@ -504,6 +477,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    Message msg = Message.obtain();
                     rst = createData.post(req);
                     msg = Message.obtain();
                     msg.obj = rst;
@@ -515,10 +489,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
     private void delete_cart_goods(Cart_Shop_Item_adapter adapter, int position) {
+        //删除数据库中数据
+        final JSONObject req = new JSONObject();
+        try {
+            req.put("type", "CD");
+            req.put("id", idOfuser + "");
+            req.put("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+            req.put("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String rst = createData.post(req);
+                if (rst.equals("true")) {
+                    handler.sendEmptyMessage(DLT_CART_OK);
+                }
+            }
+        }).start();
+        //删除列表中数据
         if ((adapter.getItemViewType(position - 1) == 1 && adapter.getItemViewType(position + 1) == 1) || (adapter.getItemViewType(position - 1) == 1 && adapter.getItemCount() == position + 1)) {
             Log.i(TAG, "该商品上下条目是店铺title");
             adapter.remove(position);//删除商品item
@@ -533,10 +526,11 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(0, adapter.getItemCount());
         }
-        //TODO——数据库中数据删除
     }
 
     public static List<Object> sortData(Data_Cart_Bean bean) {
+        if (bean == null)
+            return null;
         List<Data_Cart_Bean.Data_Shop_Bean> arrays = bean.getShopData();
         // 用来进行数据重组的新的集合arrays_obj，之所以泛型设为Object，是因为该例中的集合元素既可能为String有可能是一个bean
         List<Object> arrays_obj = new ArrayList<>();
@@ -565,10 +559,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        JSONObject req = new JSONObject();
+        try {
+            req.put("type", "CG");
+            req.put("id", idOfuser + "");
+            getData(req);//获取用户数据
+        } catch (Exception e) {
+            Log.e(TAG, "加载主界面失败");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
-        //TODO——保存退出前的状态
         super.onDestroy();
         finish();
     }
-
 }

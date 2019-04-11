@@ -19,12 +19,14 @@ public class Goods extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
     private final static int REQUEST_CODE = 5;//请求标识
-    private int GET_OK = 1;
+
     private int GET_ERROR = 0;
+    private int GET_OK = 1;//获取商品信息OK
+    private int ADD_CART_OK = 2;//添加购物车OK
+    private int ADD_STAR_OK = 3;//添加收藏夹OK
+    private int ADD_HATE_OK = 4;//添加黑名单OK
 
     private Intent intent1;
-
-    private String Shop;
 
     private String name1, price1, description1, photo1;
 
@@ -37,13 +39,13 @@ public class Goods extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == GET_ERROR)
-                Toast.makeText(Goods.this, "加载商品信息失败！", Toast.LENGTH_SHORT);
-            else {
+                Toast.makeText(Goods.this, "操作失败！", Toast.LENGTH_SHORT);
+            else if (msg.what == GET_OK) {
                 try {
                     JSONObject goods = new JSONObject(msg.obj.toString());
                     name1 = goods.getString("goods_name");
-                    //TODO——图片传输photo=goods.getString("photo");
-                    photo1 = "head5";
+                    //TODO——图片传输;
+                    photo1 = goods.getString("photo");
                     price1 = goods.getString("price");
                     description1 = goods.getString("description");
                     set();
@@ -51,7 +53,12 @@ public class Goods extends AppCompatActivity {
                     Log.e(TAG, "handleMessage: 解析商品数据失败");
                     e.printStackTrace();
                 }
-            }
+            } else if (msg.what == ADD_CART_OK)//添加购物车成功
+                Toast.makeText(Goods.this, "加入购物车成功", Toast.LENGTH_SHORT).show();
+            else if (msg.what == ADD_HATE_OK)//添加黑名单成功
+                Toast.makeText(Goods.this, "加入黑名单成功", Toast.LENGTH_SHORT).show();
+            else if (msg.what == ADD_STAR_OK)
+                Toast.makeText(Goods.this, "加入收藏夹成功", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -63,13 +70,8 @@ public class Goods extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Log.i(TAG, "成功跳转到商品页面");
-        //TODO——get shop_id&goods_id
-        //shop_id=bundle.getString("shop_id");
-        //goods_id=bundle.getString("goods_id");
-
-        //test
-        shop_id = "2";
-        goods_id = "1";
+        shop_id = bundle.getString("shop_id");
+        goods_id = bundle.getString("goods_id");
 
         JSONObject req = new JSONObject();
         try {
@@ -80,7 +82,6 @@ public class Goods extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-
     }
 
     private void get(final JSONObject req) {
@@ -121,7 +122,28 @@ public class Goods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "加入收藏夹");
-                //TODO——添加到收藏夹
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject req = new JSONObject();
+                        try {
+                            req.put("type", "LA_G");
+                            req.put("id", MainActivity.idOfuser);
+                            req.put("shop_id", shop_id);
+                            req.put("goods_id", goods_id);
+                            req.put("star", "1");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String rst = getdata.post(req);//试图加入收藏夹
+                        if (rst.equals("true")) {
+                            Log.i(TAG, "run: 加入收藏夹成功");//无需立即刷新列表
+                            handler.sendEmptyMessage(ADD_STAR_OK);
+                        } else if (rst.equals("false")) {
+                            Log.i(TAG, "run: 加入收藏夹失败");
+                        }
+                    }
+                }).start();
             }
         });
 
@@ -129,7 +151,29 @@ public class Goods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "加入黑名单");
-                //TODO——添加到黑名单
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject req = new JSONObject();
+                        try {
+                            req.put("type", "LA_G");
+                            req.put("id", MainActivity.idOfuser);
+                            req.put("shop_id", shop_id);
+                            req.put("goods_id", goods_id);
+                            req.put("star", "0");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String rst = getdata.post(req);//试图加入黑名单
+                        if (rst.equals("true")) {
+                            Log.i(TAG, "run: 加入黑名单成功");//无需立即刷新列表
+                            handler.sendEmptyMessage(ADD_HATE_OK);
+                        } else if (rst.equals("false")) {
+                            Log.i(TAG, "run: 加入黑名单失败");
+                            handler.sendEmptyMessage(GET_ERROR);
+                        }
+                    }
+                }).start();
             }
         });
 
@@ -137,7 +181,29 @@ public class Goods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "加入购物车");
-                //TODO——添加到购物车,若购物车内已有，则商品数量++
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject req = new JSONObject();
+                        try {
+                            req.put("type", "CA");
+                            req.put("id", MainActivity.idOfuser);
+                            req.put("shop_id", shop_id);
+                            req.put("goods_id", goods_id);
+                            req.put("sum", "1");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String rst = getdata.post(req);//试图加入购物车
+                        if (rst.equals("true")) {
+                            Log.i(TAG, "run: 加入购物车成功");
+                            handler.sendEmptyMessage(ADD_CART_OK);
+                        } else if (rst.equals("false")) {
+                            Log.i(TAG, "run: 加入购物车失败");
+                            handler.sendEmptyMessage(GET_ERROR);
+                        }
+                    }
+                }).start();
             }
         });
 
@@ -145,7 +211,7 @@ public class Goods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent1 = new Intent(Goods.this, Shop.class);
-                intent1.putExtra("name", Shop);
+                intent1.putExtra("shop_id", shop_id);
                 startActivity(intent1);
             }
         });
