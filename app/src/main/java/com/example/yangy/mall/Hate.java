@@ -80,17 +80,15 @@ public class Hate extends TabActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                JSONObject req = new JSONObject();
                 List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
                 try {
+                    JSONObject req = new JSONObject();
                     req.put("type", "LG_G");
                     req.put("id", MainActivity.idOfuser + "");
                     req.put("star", "0");
-                    String rst = createData.post(req);//获取收藏夹商品信息
+                    ArrayList<String> rst = createData.post_m(req);//获取黑名单商品信息
 
-                    JSONObject star = new JSONObject(rst);//获取商品简略列表（shop_id,goods_id）
-                    JSONObject goods = new JSONObject();//存储查询商品简略信息
-                    JSONObject req_g;//新查询商品请求
+                    JSONObject goods = null;//存储查询商品简略信息
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
                     Data_Cart_Bean.Data_Shop_Bean shop_bean = null;//临时店铺信息
@@ -102,14 +100,8 @@ public class Hate extends TabActivity {
                     shop_bean = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
 
                     int i = 0;//查询商品序号
-                    while (i < star.getInt("count")) {
-                        req_g = new JSONObject();
-                        req_g.put("type", "GG");
-                        req_g.put("goods_id", star.getString("goods_id" + i));
-                        req_g.put("shop_id", star.getString("shop_id" + i));
-                        Log.i(TAG, "查询goods " + star.getString("goods_id" + i) + " " + star.getString("shop_id" + i));
-                        rst = createData.post(req_g);//获取商品信息
-                        goods = new JSONObject(rst);//商品信息string转json
+                    while (i < rst.size()) {
+                        goods = new JSONObject(rst.get(i));//商品信息string转json
                         //添加商品信息，加入商店商品列表
                         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
                         goods_bean.setShopname(goods.getString("shop_name"));//设定商店名称
@@ -123,8 +115,8 @@ public class Hate extends TabActivity {
                         data_goods_beans.add(goods_bean);
                         i++;
                     }
-                    //如果收藏夹非空
-                    if (star.getInt("count") > 0) {
+                    //如果黑名单非空
+                    if (rst.size() > 0) {
                         shop_bean.setName(goods.getString("shop_name"));//设定商店名
                         shop_bean.setId(goods.getString("shop_id"));//设定商店id
                         shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
@@ -135,9 +127,8 @@ public class Hate extends TabActivity {
                         msg.what = GET_GOODS_OK;
                         msg.obj = data_cart_bean;
                         handler.sendMessage(msg);
-                    } else {
+                    } else
                         handler.sendEmptyMessage(HATE_EMPTY_G);
-                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -145,28 +136,31 @@ public class Hate extends TabActivity {
                 data_shop_beans = new ArrayList<>();//临时店铺列表
                 //获取收藏夹商店信息
                 try {
-                    req = new JSONObject();
+                    JSONObject req = new JSONObject();
                     req.put("type", "LG_S");
                     req.put("id", MainActivity.idOfuser + "");
                     req.put("star", "0");
 
-                    String rst = createData.post(req);
-                    JSONObject star = new JSONObject(rst);//获取商品简略列表（shop_id）
+                    ArrayList<String> rst = createData.post_m(req);//获取黑名单商店信息
+
+                    JSONObject shop = null;//存储查询商品简略信息
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
                     Data_Cart_Bean.Data_Shop_Bean shop_bean = null;//临时店铺信息
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
                     int i = 0;
-                    while (i < star.getInt("count")) {
+                    while (i < rst.size()) {
+                        shop = new JSONObject(rst.get(i));//商店信息转json
                         shop_bean = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
-                        shop_bean.setName(star.getString("shop_name" + i));//设定商店名
-                        shop_bean.setId(star.getString("shop_id" + i));//设定商店id
+                        shop_bean.setName(shop.getString("shop_name"));//设定商店名
+                        shop_bean.setId(shop.getString("shop_id"));//设定商店id
                         shop_bean.setGoodsData(null);//将商品列表加入店铺信息
                         data_shop_beans.add(shop_bean);//将商店加入购物车列表
                         i++;
                     }
-                    if (star.getInt("count") > 0) {
+                    //如果黑名单非空
+                    if (rst.size() > 0) {
                         data_cart_bean.setShopData(data_shop_beans);
                         Message msg = Message.obtain();
                         msg.what = GET_SHOP_OK;

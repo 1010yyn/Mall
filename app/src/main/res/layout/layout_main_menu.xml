@@ -28,12 +28,6 @@
         android:title="@string/M_change_user" />
 
     <item
-        android:id="@+id/info_app"
-        android:checkable="true"
-        android:icon="@drawable/c_fur"
-        android:title="@string/M_info_app" />
-
-    <item
         android:id="@+id/quit"
         android:checkable="true"
         android:icon="@drawable/c_fur"

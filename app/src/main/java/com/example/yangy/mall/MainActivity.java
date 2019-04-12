@@ -152,10 +152,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "正在跳转页面到黑名单页面");
                         startActivity(intent);
                         break;
-                    case "软件信息":
-                        Log.i(TAG, "跳转软件信息界面");
-                        //TODO——切换到软件信息界面（最后做！）
-                        break;
                     case "切换用户":
                         Log.i(TAG, "切换用户");
                         intent = new Intent(MainActivity.this, Login.class);
@@ -400,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //TODO——购物车修改
                 String rst = createData.post(req);
                 Log.i(TAG, "购物车商品id列表" + rst);
                 List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
@@ -555,6 +552,10 @@ public class MainActivity extends AppCompatActivity {
             bundle = data.getExtras();
             head.setImageResource(getResources().getIdentifier(bundle.getString("head"), "drawable", getBaseContext().getPackageName()));//重新设置头像
             name.setText(bundle.getString("nick"));
+        } else if (reQuestCode == REQUEST_CODE && resultCode == Login.REQUEST_CODE) {
+            Log.i(TAG, "登录成功！");
+            bundle = data.getExtras();
+            idOfuser = Integer.valueOf(bundle.getString("id"));//获取用户id;
         }
     }
 
