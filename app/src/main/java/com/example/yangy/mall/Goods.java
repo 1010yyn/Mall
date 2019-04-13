@@ -30,7 +30,7 @@ public class Goods extends AppCompatActivity {
 
     private String name1, price1, description1, photo1;
 
-    private String shop_id, goods_id;
+    private String shop_id, goods_id, shop_name;
 
     private CreateData getdata = new CreateData();
 
@@ -44,10 +44,11 @@ public class Goods extends AppCompatActivity {
                 try {
                     JSONObject goods = new JSONObject(msg.obj.toString());
                     name1 = goods.getString("goods_name");
-                    //TODO——图片传输;
+                    //TODO——获取图片;
                     photo1 = goods.getString("photo");
                     price1 = goods.getString("price");
                     description1 = goods.getString("description");
+                    shop_name = goods.getString("shop_name");
                     set();
                 } catch (JSONException e) {
                     Log.e(TAG, "handleMessage: 解析商品数据失败");
@@ -88,7 +89,7 @@ public class Goods extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String rst = getdata.post(req);//尝试获取商品信息
+                String rst = getdata.post_m(req).get(0);//尝试获取商品信息
                 Message msg = Message.obtain();
                 if (rst.equals("false"))//获取失败
                     handler.sendEmptyMessage(GET_ERROR);
@@ -135,7 +136,7 @@ public class Goods extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        String rst = getdata.post(req);//试图加入收藏夹
+                        String rst = getdata.post_m(req).get(0);//试图加入收藏夹
                         if (rst.equals("true")) {
                             Log.i(TAG, "run: 加入收藏夹成功");//无需立即刷新列表
                             handler.sendEmptyMessage(ADD_STAR_OK);
@@ -164,7 +165,7 @@ public class Goods extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        String rst = getdata.post(req);//试图加入黑名单
+                        String rst = getdata.post_m(req).get(0);//试图加入黑名单
                         if (rst.equals("true")) {
                             Log.i(TAG, "run: 加入黑名单成功");//无需立即刷新列表
                             handler.sendEmptyMessage(ADD_HATE_OK);
@@ -194,7 +195,7 @@ public class Goods extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        String rst = getdata.post(req);//试图加入购物车
+                        String rst = getdata.post_m(req).get(0);//试图加入购物车
                         if (rst.equals("true")) {
                             Log.i(TAG, "run: 加入购物车成功");
                             handler.sendEmptyMessage(ADD_CART_OK);
@@ -211,7 +212,7 @@ public class Goods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent1 = new Intent(Goods.this, Shop.class);
-                intent1.putExtra("shop_id", shop_id);
+                intent1.putExtra("shop_name", shop_name);
                 startActivity(intent1);
             }
         });

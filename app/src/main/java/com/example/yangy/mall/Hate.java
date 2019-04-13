@@ -47,26 +47,33 @@ public class Hate extends TabActivity {
 
     private CreateData createData = new CreateData();
 
+    private boolean flag_goods = false;
+    private boolean flag_shop = false;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == GET_GOODS_OK) {
                 data_cart_bean = (Data_Cart_Bean) msg.obj;//收藏夹商品数据
+                flag_goods = true;
             } else if (msg.what == GET_SHOP_OK) {
                 data_cart_bean1 = (Data_Cart_Bean) msg.obj;//收藏夹店铺数据
-                setData();//设定数据
-            } else if (msg.what == HATE_EMPTY_G)
+                flag_shop = true;
+            } else if (msg.what == HATE_EMPTY_G) {//收藏夹商品为空
                 data_cart_bean = null;
-            else if (msg.what == HATE_EMPTY_S) {
+                flag_goods = true;
+            } else if (msg.what == HATE_EMPTY_S) {//收藏夹商店为空
                 data_cart_bean1 = null;
-                setData();//设定数据
+                flag_shop = true;
             } else if (msg.what == DLT_SHOP_OK)
                 Toast.makeText(Hate.this, "删除黑名单店铺成功！", Toast.LENGTH_SHORT).show();
             else if (msg.what == DLT_GOODS_OK)
                 Toast.makeText(Hate.this, "删除黑名单商品成功！", Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(Hate.this, "操作失败！", Toast.LENGTH_SHORT).show();
+            if (flag_goods && flag_shop)
+                setData();//设定数据
         }
     };
 
@@ -76,7 +83,10 @@ public class Hate extends TabActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         bundle = intent.getExtras();
+    }
 
+    //获取黑名单信息
+    void getData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -91,8 +101,8 @@ public class Hate extends TabActivity {
                     JSONObject goods = null;//存储查询商品简略信息
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
-                    Data_Cart_Bean.Data_Shop_Bean shop_bean = null;//临时店铺信息
-                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans = null;//临时商品列表
+                    Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
+                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
 
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
@@ -109,6 +119,7 @@ public class Hate extends TabActivity {
                         goods_bean.setGoodsname(goods.getString("goods_name"));//设定商品名称
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
+                        goods_bean.setSum("");//设定数量（此处为空，黑名单不需要显示数目
                         goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
@@ -143,10 +154,9 @@ public class Hate extends TabActivity {
 
                     ArrayList<String> rst = createData.post_m(req);//获取黑名单商店信息
 
-                    JSONObject shop = null;//存储查询商品简略信息
+                    JSONObject shop;//存储查询商品简略信息
 
-                    Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
-                    Data_Cart_Bean.Data_Shop_Bean shop_bean = null;//临时店铺信息
+                    Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
                     int i = 0;
@@ -172,7 +182,6 @@ public class Hate extends TabActivity {
                 }
             }
         }).start();
-
     }
 
     void setData() {
@@ -244,7 +253,7 @@ public class Hate extends TabActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                String rst = createData.post(req);
+                                String rst = createData.post_m(req).get(0);
                                 if (rst.equals("true")) {
                                     handler.sendEmptyMessage(DLT_GOODS_OK);
                                 } else
@@ -282,7 +291,7 @@ public class Hate extends TabActivity {
                 Log.i(TAG, "单击商品");
                 intent1 = new Intent(Hate.this, Shop.class);
                 bundle = new Bundle();//清空数据
-                bundle.putCharSequence("shop", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopname());
+                bundle.putCharSequence("shop_name", (String) adapter.getItem(position));
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
@@ -319,7 +328,7 @@ public class Hate extends TabActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                String rst = createData.post(req);
+                                String rst = createData.post_m(req).get(0);
                                 if (rst.equals("true")) {
                                     handler.sendEmptyMessage(DLT_SHOP_OK);
                                 } else
@@ -335,6 +344,12 @@ public class Hate extends TabActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();//获取信息
     }
 
     public void onBackPressed() {

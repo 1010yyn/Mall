@@ -139,7 +139,7 @@ public class Info_User_Modify extends AppCompatActivity {
             @Override
             public void run() {
                 Log.i(TAG, "试图更新信息");
-                String rst = getdata.post(req);//更新并获取数据
+                String rst = getdata.post_m(req).get(0);//更新并获取数据
                 if (rst.equals("true"))//更新成功
                     handler.sendEmptyMessage(UPDATE_OK);
                 else handler.sendEmptyMessage(UPDATE_ERROR);

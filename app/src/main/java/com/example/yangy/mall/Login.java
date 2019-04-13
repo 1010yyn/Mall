@@ -102,7 +102,7 @@ public class Login extends AppCompatActivity {
                                 req.put("address", " ");
                                 req.put("head", "head1");
                                 req.put("nick", Name);
-                                String rst = createData.post(req);
+                                String rst = createData.post_m(req).get(0);
                                 if (rst.equals("false"))//注册失败
                                     handler.sendEmptyMessage(REGIST_ERROR);
                                 else if (rst.equals("true"))//注册成功
@@ -121,7 +121,7 @@ public class Login extends AppCompatActivity {
                                 req.put("type", "UL");
                                 req.put("name", Name);
                                 req.put("password", Password);
-                                String rst = createData.post(req);
+                                String rst = createData.post_m(req).get(0);
                                 if (rst.equals("false"))//登录失败
                                     handler.sendEmptyMessage(LOGIN_ERROR);
                                 else {

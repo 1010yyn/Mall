@@ -66,7 +66,7 @@ public class Data_Cart_Bean extends JSONObject {
             private String goods_id;//商品id
             private String goods_name;//商品名称
             private int price;//商品价格
-            private int sum;//商品总数
+            private String sum;//商品总数
             private int photo;//商品图片资源id
             private boolean isSelected;//是否被选中
             private String description;//商品描述
@@ -116,10 +116,10 @@ public class Data_Cart_Bean extends JSONObject {
             }
 
             String getSum() {
-                return Integer.toString(sum);
+                return sum;
             }
 
-            void setSum(int sum) {
+            void setSum(String sum) {
                 this.sum = sum;
             }
 

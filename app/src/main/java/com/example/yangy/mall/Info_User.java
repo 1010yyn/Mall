@@ -70,7 +70,7 @@ public class Info_User extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                rst = getdata.post(req);//连接服务器获取信息
+                rst = getdata.post_m(req).get(0);//连接服务器获取信息
                 Log.i(TAG, "返回信息：" + rst);//查询数据库获取用户个人信息
                 if (rst.equals("false"))//获取失败
                     handler.sendEmptyMessage(GET_ERROR);

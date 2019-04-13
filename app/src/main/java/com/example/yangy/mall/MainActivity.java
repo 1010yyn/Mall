@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -63,8 +64,13 @@ public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private Bundle bundle = new Bundle();
 
-    private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的OpenRecordBean对象
+    private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//购物车数据
+    private Data_Cart_Bean data_cart_bean1 = new Data_Cart_Bean();//主页列表随机商品数据
+
     private CreateData createData = new CreateData();
+
+    private boolean flag_cart = false;
+    private boolean flag_user = false;
 
     private Handler handler = new Handler() {
         @Override
@@ -74,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Log.i(TAG, "handleMessage: 获取列表数据成功");
                     data_cart_bean = (Data_Cart_Bean) msg.obj;
+                    flag_cart = true;
                 } catch (Exception e) {
                     Log.e(TAG, "handleMessage:转换数据失败 ");
                     e.printStackTrace();
@@ -83,33 +90,25 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject js = new JSONObject(msg.obj.toString());
                     name1 = js.getString("name");
                     head_Name = js.getString("head");
-                    setData();//加载主界面内容
+                    flag_user = true;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else if (msg.what == CART_EMPTY) {
                 data_cart_bean = null;
+                flag_cart = true;
             }
-
+            if (flag_user && flag_cart)
+                setData();//加载主界面内容
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Log.i(TAG, "开屏");
         setContentView(R.layout.layout_start);
         Log.i(TAG, "开屏停留3s");
-//        JSONObject req = new JSONObject();
-//        try {
-//            req.put("type", "CG");
-//            req.put("id", idOfuser + "");
-//            getData(req);//获取用户数据
-//        } catch (Exception e) {
-//            Log.e(TAG, "加载主界面失败");
-//            e.printStackTrace();
-//        }
     }
 
     void setData() {
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Food");
+                intent.putExtra("key", "Food");
                 Log.i(TAG, "正在跳转页面到食品类搜索结果页面");
                 startActivity(intent);
             }
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Clothes");
+                intent.putExtra("key", "Clothes");
                 Log.i(TAG, "正在跳转页面到衣饰类搜索结果页面");
                 startActivity(intent);
             }
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Makeup");
+                intent.putExtra("key", "Makeup");
                 Log.i(TAG, "正在跳转页面到美妆类搜索结果界面");
                 startActivity(intent);
             }
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Exercise");
+                intent.putExtra("key", "Exercise");
                 Log.i(TAG, "正在跳转页面到运动类搜索结果");
                 startActivity(intent);
             }
@@ -226,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Furniture");
+                intent.putExtra("key", "Furniture");
                 Log.i(TAG, "正在跳转页面到家居类搜索结果");
                 startActivity(intent);
             }
@@ -235,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("str", "Electronic");
+                intent.putExtra("key", "Electronic");
                 Log.i(TAG, "正在跳转页面到电子产品类搜索结果");
                 startActivity(intent);
             }
@@ -285,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.i(TAG, "进行搜索，关键词为：" + query);
                 intent = new Intent(MainActivity.this, Show_result.class);//跳转到搜索结果页
-                intent.putExtra("name", query);
+                intent.putExtra("key", query);
                 startActivity(intent);
                 return true;
             }
@@ -386,8 +385,17 @@ public class MainActivity extends AppCompatActivity {
         calculate_goods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO——获取选中项目，生成订单
+                ArrayList<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> rst = new ArrayList<>();//商品list
+                for (int i = adapter.getItemCount(); i > 0; i--)
+                    if (adapter.getItemViewType(i) == 2)//商品item
+                        if (((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(i)).getStatus())//选中状态
+                            rst.add((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(i));//加入列表
                 delete_goods.performClick();//删除订单中的商品
+                intent = new Intent(MainActivity.this, Order.class);
+                bundle = new Bundle();//清空数据
+                bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) rst);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
@@ -396,14 +404,11 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //TODO——购物车修改
-                String rst = createData.post(req);
-                Log.i(TAG, "购物车商品id列表" + rst);
                 List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
                 try {
-                    JSONObject cart = new JSONObject(rst);//获取商品简略列表（shop_id,goods_id）
-                    JSONObject goods = new JSONObject();//存储查询商品简略信息
-                    JSONObject req_g;//新查询商品请求
+                    ArrayList<String> rst = createData.post_m(req);
+
+                    JSONObject goods;//存储查询商品简略信息
                     int shop = -1;//记录shopid，便于合并商品
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
@@ -412,21 +417,15 @@ public class MainActivity extends AppCompatActivity {
 
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
-                    int i = 0;//查询商品序号
-                    while (i < cart.getInt("count")) {
-                        req_g = new JSONObject();
-                        req_g.put("type", "GG");
-                        req_g.put("goods_id", cart.getString("goods_id" + i));
-                        req_g.put("shop_id", cart.getString("shop_id" + i));
-                        Log.i(TAG, "查询goods " + cart.getString("goods_id" + i) + " " + cart.getString("shop_id" + i));
-                        rst = createData.post(req_g);//获取商品信息
-                        goods = new JSONObject(rst);//商品信息string转json
+                    int i = 0;
+                    while (i < rst.size()) {
+                        goods = new JSONObject(rst.get(i));//转换数据
                         //判定是否同一家店商品
                         //不是同一家店，则先将商店加入购物车列表然后新建商店，否则不做处理
-                        if (shop != Integer.parseInt(goods.getString("shop_id"))) {
+                        if (shop != goods.getInt("shop_id")) {
                             //将店铺加入临时店铺列表
-                            if (i != 0)//若是第一件商品，则需要创建新商店item，否则，将当前商店加入购物车列表
-                            {
+                            if (i != 0)//若是第一件商品，则需要创建新商店item，否则，将先当前商店加入购物车列表
+                            {//将商店加入购物车内商店列表
                                 shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
                                 data_shop_beans.add(shop_bean);//将商店加入购物车列表
                             }
@@ -445,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                         goods_bean.setGoodsname(goods.getString("goods_name"));//设定商品名称
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
-                        goods_bean.setSum(cart.getInt("sum" + i));//设定数量(从购物车信息获取)
+                        goods_bean.setSum(goods.getString("sum"));//设定数量
                         goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
@@ -453,7 +452,7 @@ public class MainActivity extends AppCompatActivity {
                         i++;
                     }
                     //如果购物车非空
-                    if (cart.getInt("count") > 0) {
+                    if (rst.size() > 0) {
                         //当前店铺还未进行加入购物车操作，跳出循环后继续
                         shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
                         data_shop_beans.add(shop_bean);//将商店加入购物车列表
@@ -466,22 +465,21 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         handler.sendEmptyMessage(CART_EMPTY);
                     }
-                    //获取用户信息填充头像和昵称
+                } catch (JSONException e) {
+                    Log.e(TAG, "解析购物车数据错误" + e.getMessage());
+                    e.printStackTrace();
+                }
+                //获取用户头像和昵称
+                try {
                     JSONObject req = new JSONObject();
-                    try {
-                        req.put("type", "UG");
-                        req.put("id", idOfuser + "");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    req.put("type", "UG");
+                    req.put("id", idOfuser + "");
+                    Log.i(TAG, "run: 试图获取个人信息");
                     Message msg = Message.obtain();
-                    rst = createData.post(req);
-                    msg = Message.obtain();
-                    msg.obj = rst;
+                    msg.obj = createData.post_m(req).get(0);
                     msg.what = GET_USER_OK;
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
-                    Log.e(TAG, "解析购物车数据错误" + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -502,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String rst = createData.post(req);
+                String rst = createData.post_m(req).get(0);
                 if (rst.equals("true")) {
                     handler.sendEmptyMessage(DLT_CART_OK);
                 }

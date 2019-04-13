@@ -64,6 +64,7 @@ public class Shop extends AppCompatActivity {
         Intent intent = getIntent();
         bundle = intent.getExtras();
         shop_id = bundle.getString("shop_id");//获取商店id
+        shop_name = bundle.getString("shop_name");
         Log.i(TAG, "成功跳转商店界面");
         setData();
         new Thread(new Runnable() {
@@ -71,10 +72,9 @@ public class Shop extends AppCompatActivity {
             public void run() {
                 try {
                     JSONObject req = new JSONObject();
-                    req.put("shop_id", shop_id);
+                    req.put("shop_name", shop_name);
                     req.put("type", "SG");
                     ArrayList<String> rst = createData.post_m(req);//查询商品信息
-                    Log.i(TAG, rst.get(1));
 
                     JSONObject goods = null;
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
@@ -88,7 +88,7 @@ public class Shop extends AppCompatActivity {
 
                     List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
 
-                    int i = 0;//0?1
+                    int i = 0;
                     while (i < rst.size()) {
                         goods = new JSONObject(rst.get(i));//转换数据
                         //添加商品信息，加入商店商品列表
@@ -142,7 +142,7 @@ public class Shop extends AppCompatActivity {
                             req.put("shop_id", shop_id);
                             req.put("shop_name", shop_name);
                             req.put("star", "1");
-                            String rst = createData.post(req);
+                            String rst = createData.post_m(req).get(0);
                             if (rst.equals("true"))
                                 handler.sendEmptyMessage(ADD_STAR_OK);
                             else if (rst.equals("false"))
@@ -169,7 +169,7 @@ public class Shop extends AppCompatActivity {
                             req.put("shop_id", shop_id);
                             req.put("shop_name", shop_name);
                             req.put("star", "0");
-                            String rst = createData.post(req);
+                            String rst = createData.post_m(req).get(0);
                             if (rst.equals("true"))
                                 handler.sendEmptyMessage(ADD_HATE_OK);
                             else if (rst.equals("false"))
