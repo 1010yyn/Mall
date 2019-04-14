@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -46,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private int GET_USER_OK = 2;//获取用户头像idOK
     private int DLT_CART_OK = 3;//删除购物车数据OK
     private int CART_EMPTY = 4;
+    private int GET_HOME_OK = 5;//主页数据OK
 
-    public static int idOfuser = 1;//默认设置为0，等待用户登录
+    private int idOfuser = 1;//默认设置为0，等待用户登录
+    private String address;//用户地址
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -80,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Log.i(TAG, "handleMessage: 获取列表数据成功");
                     data_cart_bean = (Data_Cart_Bean) msg.obj;
-                    flag_cart = true;
                 } catch (Exception e) {
                     Log.e(TAG, "handleMessage:转换数据失败 ");
                     e.printStackTrace();
@@ -90,13 +90,21 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject js = new JSONObject(msg.obj.toString());
                     name1 = js.getString("name");
                     head_Name = js.getString("head");
+                    address = js.getString("address");
                     flag_user = true;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } else if (msg.what == CART_EMPTY) {
                 data_cart_bean = null;
+                data_cart_bean1 = null;
                 flag_cart = true;
+            } else if (msg.what == GET_HOME_OK) {
+                data_cart_bean1 = (Data_Cart_Bean) msg.obj;
+                flag_cart = true;
+            } else if (msg.what == DLT_CART_OK) {
+                Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                flag_user = false;
             }
             if (flag_user && flag_cart)
                 setData();//加载主界面内容
@@ -109,6 +117,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "开屏");
         setContentView(R.layout.layout_start);
         Log.i(TAG, "开屏停留3s");
+//        JSONObject req = new JSONObject();
+//        try {
+//            req.put("type", "CG");
+//            req.put("id", idOfuser + "");
+//            getData(req);//获取用户数据
+//        } catch (Exception e) {
+//            Log.e(TAG, "加载主界面失败");
+//            e.printStackTrace();
+//        }
     }
 
     void setData() {
@@ -138,16 +155,19 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getTitle().toString()) {
                     case "个人信息":
                         intent = new Intent(MainActivity.this, Info_User.class);//为个人信息界面创建intent
+                        intent.putExtra("id", idOfuser);
                         Log.i(TAG, "正在跳转页面到个人信息页面");
                         startActivityForResult(intent, REQUEST_CODE);
                         break;
                     case "收藏夹":
                         intent = new Intent(MainActivity.this, Star.class);//为个人信息界面创建intent
+                        intent.putExtra("id", idOfuser);
                         Log.i(TAG, "正在跳转页面到收藏夹页面");
                         startActivity(intent);
                         break;
                     case "黑名单":
                         intent = new Intent(MainActivity.this, Hate.class);//为个人信息界面创建intent
+                        intent.putExtra("id", idOfuser);
                         Log.i(TAG, "正在跳转页面到黑名单页面");
                         startActivity(intent);
                         break;
@@ -245,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         //获取主页list
         RecyclerView list_goods = findViewById(R.id.home_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
-        List<Object> list = sortData(data_cart_bean);
+        List<Object> list = sortData(data_cart_bean1);
         //创建布局管理
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         list_goods.setLayoutManager(manager);
@@ -264,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                 bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                bundle.putInt("id", idOfuser);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -285,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "进行搜索，关键词为：" + query);
                 intent = new Intent(MainActivity.this, Show_result.class);//跳转到搜索结果页
                 intent.putExtra("key", query);
+                intent.putExtra("id", idOfuser);
                 startActivity(intent);
                 return true;
             }
@@ -293,17 +315,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 String selection = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY + " LIKE '%" + newText + "%' " + " OR "
                         + ContactsContract.RawContacts.SORT_KEY_PRIMARY + " LIKE '%" + newText + "%' ";
-                // String[] selectionArg = { queryText };
-                //mCursor = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, PROJECTION, selection, null, null);
-                //mAdapter.swapCursor(mCursor); // 交换指针，展示新的数据
                 return true;
             }
         });
     }
 
     protected void cart() {
-        //获取recycleview
-        RecyclerView list_cart = findViewById(R.id.cart_list_shop);
+        RecyclerView list_cart = findViewById(R.id.cart_list_shop); //获取recycleview
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = sortData(data_cart_bean);
         //创建布局管理
@@ -325,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "单击店铺" + position);
                         intent = new Intent(MainActivity.this, Shop.class);//为店铺结果界面创建intent
                         intent.putExtra("name", (String) adapter.getItem(position));
+                        intent.putExtra("id", idOfuser);
                         startActivity(intent);
                         break;
                     case R.id.cart_shop_goods__photo:
@@ -334,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
                         bundle = new Bundle();//清空数据
                         bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                         bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                        bundle.putInt("id", idOfuser);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         break;
@@ -390,10 +410,11 @@ public class MainActivity extends AppCompatActivity {
                     if (adapter.getItemViewType(i) == 2)//商品item
                         if (((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(i)).getStatus())//选中状态
                             rst.add((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(i));//加入列表
-                delete_goods.performClick();//删除订单中的商品
                 intent = new Intent(MainActivity.this, Order.class);
                 bundle = new Bundle();//清空数据
-                bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) rst);
+                bundle.putSerializable("list", rst);
+                bundle.putString("address", address);
+                bundle.putInt("id", idOfuser);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -405,6 +426,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
+                List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans1 = new ArrayList<>();//临时店铺列表
                 try {
                     ArrayList<String> rst = createData.post_m(req);
 
@@ -412,10 +434,14 @@ public class MainActivity extends AppCompatActivity {
                     int shop = -1;//记录shopid，便于合并商品
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
+                    Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean1;//临时商品信息
                     Data_Cart_Bean.Data_Shop_Bean shop_bean = null;//临时店铺信息
+                    Data_Cart_Bean.Data_Shop_Bean shop_bean1 = null;//临时店铺信息（主页用
                     List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans = null;//临时商品列表
+                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans1 = null;//临时商品列表（主页列表用
 
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
+                    Data_Cart_Bean data_cart_bean1 = new Data_Cart_Bean();//网络请求成功返回的Bean对象(主页列表用
 
                     int i = 0;
                     while (i < rst.size()) {
@@ -428,19 +454,27 @@ public class MainActivity extends AppCompatActivity {
                             {//将商店加入购物车内商店列表
                                 shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
                                 data_shop_beans.add(shop_bean);//将商店加入购物车列表
+                                //主页
+                                shop_bean1.setGoodsData(data_goods_beans1);
+                                data_shop_beans1.add(shop_bean1);
                             }
                             //创建新商店和商店商品列表并初始化
                             data_goods_beans = new ArrayList<>();//商店商品列表初始化
                             shop_bean = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
                             shop_bean.setName(goods.getString("shop_name"));//设定商店名
                             shop_bean.setId(goods.getString("shop_id"));//设定商店id
+                            //主页设定
+                            data_goods_beans1 = new ArrayList<>();//商店商品列表初始化
+                            shop_bean1 = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
+                            shop_bean1.setName(goods.getString("shop_name"));//设定商店名
+                            shop_bean1.setId(goods.getString("shop_id"));//设定商店id
                             //更新当前商店id
                             shop = Integer.parseInt(goods.getString("shop_id"));
                         }
                         //添加商品信息，加入商店商品列表
                         goods_bean = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
                         goods_bean.setShopname(goods.getString("shop_name"));//设定商店名称
-                        goods_bean.setShopid(goods.getString("goods_id"));//设定商店id
+                        goods_bean.setShopid(goods.getString("shop_id"));//设定商店id
                         goods_bean.setGoodsname(goods.getString("goods_name"));//设定商品名称
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
@@ -448,7 +482,19 @@ public class MainActivity extends AppCompatActivity {
                         goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
-                        data_goods_beans.add(goods_bean);
+                        data_goods_beans.add(goods_bean);//购物车
+                        //主页
+                        goods_bean1 = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
+                        goods_bean1.setShopname(goods.getString("shop_name"));//设定商店名称
+                        goods_bean1.setShopid(goods.getString("shop_id"));//设定商店id
+                        goods_bean1.setGoodsname(goods.getString("goods_name"));//设定商品名称
+                        goods_bean1.setGoodsid(goods.getString("goods_id"));//设定商品id
+                        goods_bean1.setPrice(goods.getInt("price"));//设定商品价格
+                        goods_bean1.setSum("");//设定数量为空
+                        goods_bean1.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
+                        goods_bean1.setDescription(goods.getString("description"));//设定商品描述
+                        //添加商品至临时商品列表
+                        data_goods_beans1.add(goods_bean1);//主页展示列表
                         i++;
                     }
                     //如果购物车非空
@@ -456,11 +502,19 @@ public class MainActivity extends AppCompatActivity {
                         //当前店铺还未进行加入购物车操作，跳出循环后继续
                         shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
                         data_shop_beans.add(shop_bean);//将商店加入购物车列表
+                        shop_bean1.setGoodsData(data_goods_beans1);//主页
+                        data_shop_beans1.add(shop_bean1);//主页
                         //将所有的店铺列表加入购物车
                         data_cart_bean.setShopData(data_shop_beans);
                         Message msg = Message.obtain();
                         msg.obj = data_cart_bean;
                         msg.what = GET_CART_OK;
+                        handler.sendMessage(msg);
+                        //主页
+                        data_cart_bean1.setShopData(data_shop_beans1);
+                        msg = Message.obtain();
+                        msg.obj = data_cart_bean1;
+                        msg.what = GET_HOME_OK;
                         handler.sendMessage(msg);
                     } else {
                         handler.sendEmptyMessage(CART_EMPTY);
@@ -486,17 +540,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void delete_cart_goods(Cart_Shop_Item_adapter adapter, int position) {
-        //删除数据库中数据
-        final JSONObject req = new JSONObject();
-        try {
-            req.put("type", "CD");
-            req.put("id", idOfuser + "");
-            req.put("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
-            req.put("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    void delete_cart(final JSONObject req) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -506,6 +550,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void delete_cart_goods(Cart_Shop_Item_adapter adapter, int position) {
+        //删除数据库中数据
+        final JSONObject req = new JSONObject();
+        try {
+            req.put("type", "CD");
+            req.put("id", idOfuser);
+            req.put("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+            req.put("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         //删除列表中数据
         if ((adapter.getItemViewType(position - 1) == 1 && adapter.getItemViewType(position + 1) == 1) || (adapter.getItemViewType(position - 1) == 1 && adapter.getItemCount() == position + 1)) {
             Log.i(TAG, "该商品上下条目是店铺title");
@@ -521,6 +578,7 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyItemRemoved(position);
             adapter.notifyItemRangeChanged(0, adapter.getItemCount());
         }
+        delete_cart(req);
     }
 
     public static List<Object> sortData(Data_Cart_Bean bean) {
@@ -560,11 +618,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: ");
         JSONObject req = new JSONObject();
         try {
             req.put("type", "CG");
-            req.put("id", idOfuser + "");
+            req.put("id", idOfuser);
             getData(req);//获取用户数据
         } catch (Exception e) {
             Log.e(TAG, "加载主界面失败");

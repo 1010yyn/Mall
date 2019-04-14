@@ -34,8 +34,8 @@ public class Shop extends AppCompatActivity {
     private Bundle bundle = new Bundle();
     private Intent intent1;
 
-    private String shop_id;
-    private String shop_name = "一家店";
+    private String shop_id, shop_name;
+    private int id;
 
     private CreateData createData = new CreateData();
 
@@ -63,6 +63,7 @@ public class Shop extends AppCompatActivity {
         setContentView(R.layout.layout_shop);
         Intent intent = getIntent();
         bundle = intent.getExtras();
+        id = bundle.getInt("id");
         shop_id = bundle.getString("shop_id");//获取商店id
         shop_name = bundle.getString("shop_name");
         Log.i(TAG, "成功跳转商店界面");
@@ -138,7 +139,7 @@ public class Shop extends AppCompatActivity {
                         try {
                             JSONObject req = new JSONObject();
                             req.put("type", "LA_S");
-                            req.put("id", MainActivity.idOfuser);
+                            req.put("id", id);
                             req.put("shop_id", shop_id);
                             req.put("shop_name", shop_name);
                             req.put("star", "1");
@@ -165,7 +166,7 @@ public class Shop extends AppCompatActivity {
                         try {
                             JSONObject req = new JSONObject();
                             req.put("type", "LA_S");
-                            req.put("id", MainActivity.idOfuser);
+                            req.put("id", id);
                             req.put("shop_id", shop_id);
                             req.put("shop_name", shop_name);
                             req.put("star", "0");

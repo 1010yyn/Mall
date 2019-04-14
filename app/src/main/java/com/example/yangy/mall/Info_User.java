@@ -30,6 +30,8 @@ public class Info_User extends AppCompatActivity {
     private String Head, Id, Nickname, Phone, Address;
     private CreateData getdata = new CreateData();
 
+    private int idofUser;
+
     private static String rst;
 
     private Handler handler = new Handler() {
@@ -58,12 +60,15 @@ public class Info_User extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_info__user);
+        Intent intent = getIntent();
+        bundle = intent.getExtras();
+        idofUser = bundle.getInt("id");
         Log.i(TAG, "成功跳转到个人信息页面");
         //获取用户信息
         final JSONObject req = new JSONObject();
         try {
             req.put("type", "UG");
-            req.put("id", MainActivity.idOfuser + "");
+            req.put("id", idofUser + "");
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -108,6 +113,7 @@ public class Info_User extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "跳转到修改用户信息界面");
                 intent2 = new Intent(Info_User.this, Info_User_Modify.class);
+                bundle.putInt("idofUser", idofUser);
                 intent2.putExtras(bundle);
                 startActivityForResult(intent2, REQUEST_CODE, bundle);
             }

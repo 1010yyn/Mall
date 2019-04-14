@@ -31,6 +31,8 @@ public class Info_User_Modify extends AppCompatActivity {
     private AlertDialog.Builder ok;
     private String Head, Id, Nickname, Phone, Address;
 
+    private int idofUser;
+
     private CreateData getdata = new CreateData();
 
     private Handler handler = new Handler() {
@@ -55,6 +57,7 @@ public class Info_User_Modify extends AppCompatActivity {
         setContentView(R.layout.layout_info__user__modify);
         intent1 = getIntent();
         bundle = intent1.getExtras();
+        idofUser = bundle.getInt("idofUser");
         Log.i(TAG, "成功跳转信息修改界面");
 
         //获取个人信息界面信息，填充至修改界面
@@ -118,7 +121,7 @@ public class Info_User_Modify extends AppCompatActivity {
                         JSONObject js = new JSONObject();
                         try {
                             js.put("type", "UU");
-                            js.put("id", MainActivity.idOfuser + "");
+                            js.put("id", idofUser);
                             js.put("nick", Nickname);
                             js.put("phone", Phone);
                             js.put("address", Address);

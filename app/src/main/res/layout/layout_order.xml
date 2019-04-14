@@ -10,12 +10,20 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/order"></android.support.v7.widget.RecyclerView>
+        android:id="@+id/order_list"></android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/order_address"
+        android:layout_below="@id/order_list"
+        android:layout_above="@id/order_menu" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:id="@+id/order_menu">
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/order_pay"
+            android:text="@string/Pay"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 

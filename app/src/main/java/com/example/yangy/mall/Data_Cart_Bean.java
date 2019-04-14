@@ -1,11 +1,15 @@
 package com.example.yangy.mall;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.List;
 
 //OpenRecordBean
-public class Data_Cart_Bean extends JSONObject {
+public class Data_Cart_Bean implements Serializable {
     private List<Data_Shop_Bean> data;//店铺列表
 
     List<Data_Shop_Bean> getShopData() {
@@ -17,7 +21,7 @@ public class Data_Cart_Bean extends JSONObject {
     }
 
     //DataBean
-    public static class Data_Shop_Bean {
+    public static class Data_Shop_Bean implements Serializable {
         private String shop_id;//商店id
         private String shop_name;//店铺名称
         private int amount;//当前商店商品数量
@@ -60,7 +64,7 @@ public class Data_Cart_Bean extends JSONObject {
         }
 
         //LogDOListBean
-        public static class Data_Goods_Bean {
+        public static class Data_Goods_Bean implements Serializable {
             private String shop_name;//商店名称
             private String shop_id;//商店id
             private String goods_id;//商品id

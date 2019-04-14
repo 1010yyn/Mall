@@ -1,12 +1,13 @@
 package com.example.yangy.mall;
 
-import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Star extends TabActivity {
+public class Star extends AppCompatActivity {
 
     private String TAG = "MYTAG";
     public final static int REQUEST_CODE = 8;//请求标识
@@ -44,7 +45,10 @@ public class Star extends TabActivity {
     private Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//收藏夹商品列表
     private Data_Cart_Bean data_cart_bean1 = new Data_Cart_Bean();//收藏夹商店列表
 
+
     private CreateData createData = new CreateData();
+
+    private int id;
 
     private boolean flag_goods = false;
     private boolean flag_shop = false;
@@ -80,9 +84,12 @@ public class Star extends TabActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.layout_star);
         Intent intent = getIntent();
         bundle = intent.getExtras();
+        id = bundle.getInt("id");
         Log.i(TAG, "跳转收藏夹界面");
+        getData();
     }
 
     void getData() {
@@ -93,7 +100,7 @@ public class Star extends TabActivity {
                 try {
                     JSONObject req = new JSONObject();
                     req.put("type", "LG_G");
-                    req.put("id", MainActivity.idOfuser + "");
+                    req.put("id", id + "");
                     req.put("star", "1");
                     ArrayList<String> rst = createData.post_m(req);//获取收藏夹商品信息
 
@@ -148,7 +155,7 @@ public class Star extends TabActivity {
                 try {
                     JSONObject req = new JSONObject();
                     req.put("type", "LG_S");
-                    req.put("id", MainActivity.idOfuser);
+                    req.put("id", id);
                     req.put("star", "1");
 
                     ArrayList<String> rst = createData.post_m(req);//获取收藏夹商店信息
@@ -184,23 +191,26 @@ public class Star extends TabActivity {
     }
 
     void setData() {
-        TabHost tabHost = getTabHost();
-        LayoutInflater.from(this).inflate(R.layout.layout_star, tabHost.getTabContentView(), true);
-        tabHost.addTab(tabHost.newTabSpec("layout_star_goods").setIndicator("商品").setContent(R.id.star_tab__goods));
-        tabHost.addTab(tabHost.newTabSpec("layout_star_shop").setIndicator("商店").setContent(R.id.star_tab__shop));
+        TabHost tabHost = findViewById(android.R.id.tabhost);
+        tabHost.setup();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        inflater.inflate(R.layout.layout_star_goods, tabHost.getTabContentView());//设置商品选项卡
+        inflater.inflate(R.layout.layout_star_shop, tabHost.getTabContentView());//设置商店选项卡
+        tabHost.addTab(tabHost.newTabSpec("layout_star__goods").setIndicator("商品").setContent(R.id.star_left));
+        tabHost.addTab(tabHost.newTabSpec("layout_star__shop").setIndicator("商店").setContent(R.id.star_right));
         add_goods();//商品列表
         add_shop();//商店列表
     }
 
     private void add_goods() {
         //获取recycleview
-        RecyclerView list_goods = findViewById(R.id.star__goods_list);
+        RecyclerView list_goods = findViewById(R.id.star__goods);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean);
         //创建布局管理
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         list_goods.setLayoutManager(manager);
-        final Goods_Item_adapter adapter = new Goods_Item_adapter(list);
+        Goods_Item_adapter adapter = new Goods_Item_adapter(list);
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         list_goods.addItemDecoration(divider);
@@ -214,6 +224,7 @@ public class Star extends TabActivity {
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                 bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                bundle.putInt("id", id);
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
@@ -240,7 +251,7 @@ public class Star extends TabActivity {
                         final JSONObject req = new JSONObject();
                         try {
                             req.put("type", "LD_G");
-                            req.put("id", MainActivity.idOfuser + "");
+                            req.put("id", id + "");
                             req.put("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                             req.put("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
                             req.put("star", "1");
@@ -271,7 +282,7 @@ public class Star extends TabActivity {
 
     private void add_shop() {
         //获取recycleview
-        RecyclerView list_shop = findViewById(R.id.star__shop_list);
+        RecyclerView list_shop = findViewById(R.id.star__shop);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean1);
         //创建布局管理
@@ -290,6 +301,7 @@ public class Star extends TabActivity {
                 intent1 = new Intent(Star.this, Shop.class);
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_name", (String) adapter.getItem(position));
+                bundle.putInt("id", id);
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
@@ -317,7 +329,7 @@ public class Star extends TabActivity {
                         final JSONObject req = new JSONObject();
                         try {
                             req.put("type", "LD_S");
-                            req.put("id", MainActivity.idOfuser + "");
+                            req.put("id", id + "");
                             req.put("shop_name", adapter.getItem(position));
                             req.put("star", "1");
                         } catch (JSONException e) {
@@ -347,7 +359,7 @@ public class Star extends TabActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getData();//获取信息
+        //getData();//获取信息
     }
 
     public void onBackPressed() {

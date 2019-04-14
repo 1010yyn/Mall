@@ -18,7 +18,7 @@ import org.json.JSONObject;
 public class Goods extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
-    private final static int REQUEST_CODE = 5;//请求标识
+    public final static int REQUEST_CODE = 5;//请求标识
 
     private int GET_ERROR = 0;
     private int GET_OK = 1;//获取商品信息OK
@@ -31,6 +31,7 @@ public class Goods extends AppCompatActivity {
     private String name1, price1, description1, photo1;
 
     private String shop_id, goods_id, shop_name;
+    private int id;
 
     private CreateData getdata = new CreateData();
 
@@ -73,6 +74,7 @@ public class Goods extends AppCompatActivity {
         Log.i(TAG, "成功跳转到商品页面");
         shop_id = bundle.getString("shop_id");
         goods_id = bundle.getString("goods_id");
+        id = bundle.getInt("id");
 
         JSONObject req = new JSONObject();
         try {
@@ -129,7 +131,7 @@ public class Goods extends AppCompatActivity {
                         JSONObject req = new JSONObject();
                         try {
                             req.put("type", "LA_G");
-                            req.put("id", MainActivity.idOfuser);
+                            req.put("id", id);
                             req.put("shop_id", shop_id);
                             req.put("goods_id", goods_id);
                             req.put("star", "1");
@@ -158,7 +160,7 @@ public class Goods extends AppCompatActivity {
                         JSONObject req = new JSONObject();
                         try {
                             req.put("type", "LA_G");
-                            req.put("id", MainActivity.idOfuser);
+                            req.put("id", id);
                             req.put("shop_id", shop_id);
                             req.put("goods_id", goods_id);
                             req.put("star", "0");
@@ -188,7 +190,7 @@ public class Goods extends AppCompatActivity {
                         JSONObject req = new JSONObject();
                         try {
                             req.put("type", "CA");
-                            req.put("id", MainActivity.idOfuser);
+                            req.put("id", id);
                             req.put("shop_id", shop_id);
                             req.put("goods_id", goods_id);
                             req.put("sum", "1");
@@ -213,6 +215,7 @@ public class Goods extends AppCompatActivity {
             public void onClick(View v) {
                 intent1 = new Intent(Goods.this, Shop.class);
                 intent1.putExtra("shop_name", shop_name);
+                intent1.putExtra("id", id);
                 startActivity(intent1);
             }
         });

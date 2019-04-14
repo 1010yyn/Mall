@@ -1,12 +1,12 @@
 package com.example.yangy.mall;
 
-import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,8 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hate extends TabActivity {
-
+public class Hate extends AppCompatActivity {
 
     private String TAG = "MYTAG";
     public final static int REQUEST_CODE = 9;//请求标识
@@ -39,6 +38,8 @@ public class Hate extends TabActivity {
 
     private Intent intent1;
     private Bundle bundle = new Bundle();
+
+    private int id;
 
     private AlertDialog.Builder delete;
 
@@ -82,7 +83,10 @@ public class Hate extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        setContentView(R.layout.layout_hate);
         bundle = intent.getExtras();
+        id = bundle.getInt("id");
+        getData();
     }
 
     //获取黑名单信息
@@ -94,7 +98,7 @@ public class Hate extends TabActivity {
                 try {
                     JSONObject req = new JSONObject();
                     req.put("type", "LG_G");
-                    req.put("id", MainActivity.idOfuser + "");
+                    req.put("id", id + "");
                     req.put("star", "0");
                     ArrayList<String> rst = createData.post_m(req);//获取黑名单商品信息
 
@@ -149,7 +153,7 @@ public class Hate extends TabActivity {
                 try {
                     JSONObject req = new JSONObject();
                     req.put("type", "LG_S");
-                    req.put("id", MainActivity.idOfuser + "");
+                    req.put("id", id + "");
                     req.put("star", "0");
 
                     ArrayList<String> rst = createData.post_m(req);//获取黑名单商店信息
@@ -185,11 +189,13 @@ public class Hate extends TabActivity {
     }
 
     void setData() {
-        TabHost tabHost = getTabHost();
-        LayoutInflater.from(this).inflate(R.layout.layout_hate, tabHost.getTabContentView(), true);
-        tabHost.addTab(tabHost.newTabSpec("layout_hate_goods").setIndicator("商品").setContent(R.id.hate_tab__goods));
-        tabHost.addTab(tabHost.newTabSpec("layout_hate_shop").setIndicator("商店").setContent(R.id.hate_tab__shop));
-
+        TabHost tabHost = findViewById(android.R.id.tabhost);
+        tabHost.setup();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        inflater.inflate(R.layout.layout_hate_goods, tabHost.getTabContentView());//设置商品选项卡
+        inflater.inflate(R.layout.layout_hate_shop, tabHost.getTabContentView());//设置商店选项卡
+        tabHost.addTab(tabHost.newTabSpec("layout_hate__goods").setIndicator("商品").setContent(R.id.hate_left));
+        tabHost.addTab(tabHost.newTabSpec("layout_hate__shop").setIndicator("商店").setContent(R.id.hate_right));
         //获取数据
         add_goods();//商品列表
         add_shop();//商店列表
@@ -197,7 +203,7 @@ public class Hate extends TabActivity {
 
     private void add_goods() {
         //获取recycleview
-        RecyclerView list_goods = findViewById(R.id.hate__goods_list);
+        RecyclerView list_goods = findViewById(R.id.hate__goods);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean);
         //创建布局管理
@@ -217,6 +223,7 @@ public class Hate extends TabActivity {
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                 bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                bundle.putInt("id", id);
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
@@ -243,7 +250,7 @@ public class Hate extends TabActivity {
                         final JSONObject req = new JSONObject();
                         try {
                             req.put("type", "LD_G");
-                            req.put("id", MainActivity.idOfuser + "");
+                            req.put("id", id + "");
                             req.put("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                             req.put("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
                             req.put("star", "0");
@@ -273,7 +280,7 @@ public class Hate extends TabActivity {
 
     private void add_shop() {
         //获取recycleview
-        RecyclerView list_shop = findViewById(R.id.hate__shop_list);
+        RecyclerView list_shop = findViewById(R.id.hate__shop);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>
         List<Object> list = MainActivity.sortData(data_cart_bean1);
         //创建布局管理
@@ -288,10 +295,11 @@ public class Hate extends TabActivity {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Log.i(TAG, "单击商品");
+                Log.i(TAG, "单击商店");
                 intent1 = new Intent(Hate.this, Shop.class);
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_name", (String) adapter.getItem(position));
+                bundle.putInt("id", id);
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
@@ -300,7 +308,7 @@ public class Hate extends TabActivity {
         adapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final BaseQuickAdapter adapter, View view, final int position) {
-                Log.i(TAG, "长按购物车商品" + position);
+                Log.i(TAG, "长按黑名单商店" + position);
                 delete = new AlertDialog.Builder(Hate.this);//确认删除对话框
                 delete.setTitle("系统提示：");
                 delete.setMessage("确定要删除吗？");
@@ -319,7 +327,7 @@ public class Hate extends TabActivity {
                         final JSONObject req = new JSONObject();
                         try {
                             req.put("type", "LD_S");
-                            req.put("id", MainActivity.idOfuser + "");
+                            req.put("id", id + "");
                             req.put("shop_name", adapter.getItem(position));
                             req.put("star", "0");
                         } catch (JSONException e) {
@@ -349,7 +357,7 @@ public class Hate extends TabActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getData();//获取信息
+        //getData();//获取信息
     }
 
     public void onBackPressed() {

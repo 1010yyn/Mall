@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TabHost;
 
@@ -38,6 +37,8 @@ public class Show_result extends AppCompatActivity {
 
     private Intent intent1;
     private Bundle bundle = new Bundle();
+
+    private int id;
 
     private CreateData createData = new CreateData();
 
@@ -68,6 +69,7 @@ public class Show_result extends AppCompatActivity {
         setContentView(R.layout.layout_show_result);
         Intent intent = getIntent();
         bundle = intent.getExtras();
+        id = bundle.getInt("id");
         String key = bundle.getString("key");
         Log.i(TAG, "成功跳转到搜索结果页面，本次搜索关键词为：" + key);
         Query(key);
@@ -161,9 +163,6 @@ public class Show_result extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 String selection = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY + " LIKE '%" + newText + "%' " + " OR "
                         + ContactsContract.RawContacts.SORT_KEY_PRIMARY + " LIKE '%" + newText + "%' ";
-//                 String[] selectionArg = { queryText };
-//                mCursor = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, PROJECTION, selection, null, null);
-//                mAdapter.swapCursor(mCursor); // 交换指针，展示新的数据
                 return true;
             }
         });
@@ -179,7 +178,7 @@ public class Show_result extends AppCompatActivity {
                     JSONObject req = new JSONObject();
                     req.put("type", "GS");
                     req.put("key", key);
-                    req.put("id", MainActivity.idOfuser);
+                    req.put("id", id);
                     ArrayList<String> rst = createData.post_m(req);//获取收藏夹商品信息
 
                     JSONObject goods = null;//存储查询商品简略信息
@@ -233,7 +232,7 @@ public class Show_result extends AppCompatActivity {
                 try {
                     JSONObject req = new JSONObject();
                     req.put("type", "SS");
-                    req.put("id", MainActivity.idOfuser);
+                    req.put("id", id);
                     req.put("key", key);
 
                     ArrayList<String> rst = createData.post_m(req);//获取搜素商店信息

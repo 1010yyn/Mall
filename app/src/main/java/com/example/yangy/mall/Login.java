@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity {
                 intent.putExtra("id", msg.obj.toString());
                 startActivity(intent);
                 finish();
+
             } else if (msg.what == REGIST_OK) {
                 Toast.makeText(Login.this, "注册成功！请重新登录！", Toast.LENGTH_SHORT).show();
                 password.setText("");//密码清空
