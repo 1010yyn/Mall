@@ -21,9 +21,9 @@ public class CreateData extends Activity {
     private String TAG = "MYTAG";
 
     public ArrayList<String> post_m(JSONObject req) {
-        String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
+        //String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
         //String strUrl = "http://172.22.70.245:8080/MyServer/server_servlet";//图书馆
-        //String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
+        String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
         String result = "";
         ArrayList<String> rst = new ArrayList<>();
         URL url;
@@ -63,6 +63,5 @@ public class CreateData extends Activity {
         }
         return rst;
     }
-
     //TODO——get图片
 }

@@ -16,7 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/order_address"
-        android:layout_below="@id/order_list"
+        android:layout_below="@id/order_list" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/order_number"
+        android:layout_below="@id/order_address"
         android:layout_above="@id/order_menu" />
 
     <RelativeLayout

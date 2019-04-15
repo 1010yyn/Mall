@@ -13,7 +13,7 @@
     <string name="Calculate">结算</string>
 
     <!--订单-->
-    <string name="Pay">确认支付</string>
+    <string name="Pay">确认下单</string>
 
     <!--主页-->
     <string name="C_fd">食品</string>//食物分类

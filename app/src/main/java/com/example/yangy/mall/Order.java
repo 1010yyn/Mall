@@ -21,7 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Order extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class Order extends AppCompatActivity {
     public final static int REQUEST_CODE = 11;//请求标识
     private int UPDATE_OK = 1;
     private int UPDATE_ERROR = 0;
+    private int DELETE_ORDER_OK = 2;
 
     private Intent intent;
     private Bundle bundle;
@@ -48,10 +51,11 @@ public class Order extends AppCompatActivity {
             super.handleMessage(msg);
             if (msg.what == UPDATE_OK) {
                 deleteCart();//删除购物车商品
-                //跳转支付
+                finish();
             } else if (msg.what == UPDATE_ERROR) {
-                //删除错误订单
-            }
+                deleleOrder();//删除错误订单
+            } else if (msg.what == DELETE_ORDER_OK)
+                finish();
         }
     };
 
@@ -71,6 +75,10 @@ public class Order extends AppCompatActivity {
         data_shop_beans.add(shop_bean);//将该商店加入店铺列表
         data_cart_bean.setShopData(data_shop_beans);//店铺列表加入到购物车中
 
+        Calendar cld = Calendar.getInstance();
+        cld.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));//设置时区
+        time = String.valueOf(cld.get(Calendar.YEAR)) + String.valueOf(cld.get(Calendar.MONTH) + 1) + String.valueOf(cld.get(Calendar.DATE)) + String.valueOf(cld.get(Calendar.HOUR) + 12) + String.valueOf(cld.get(Calendar.MINUTE)) + String.valueOf(cld.get(Calendar.SECOND)) + String.valueOf(cld.get(Calendar.MILLISECOND));
+
         setData();//填充订单信息
         Button pay = findViewById(R.id.order_pay);
         pay.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +87,7 @@ public class Order extends AppCompatActivity {
                 updateData();//确认支付时，添加订单
             }
         });
+
     }
 
     void setData() {
@@ -111,7 +120,11 @@ public class Order extends AppCompatActivity {
         //设定用户地址
         String address = bundle.getString("address");
         TextView Address = findViewById(R.id.order_address);
-        Address.setText(address);
+        Address.setText("地址：" + address);
+
+        //显示订单编号
+        TextView number = findViewById(R.id.order_number);
+        number.setText("订单编号：" + time);
     }
 
     //订单信息记录到数据库
@@ -125,18 +138,18 @@ public class Order extends AppCompatActivity {
                     int i = 0;
                     while (i < list.size()) {
                         req = new JSONObject();
-                        req.put("tpye", "OA");
+                        req.put("type", "OA");
                         req.put("id", id);
-                        req.put("ordernumber", "we");
+                        req.put("order_number", time);
                         req.put("goods_id", list.get(i).getGoodsid());
                         req.put("shop_id", list.get(i).getShopid());
-                        req.put("time", time);
                         req.put("sum", list.get(i).getSum());
                         String rst = createData.post_m(req).get(0);
                         if (rst.equals("false")) {
                             flag = false;
                             break;//跳出循环
                         }
+                        i++;
                     }
                     if (flag)
                         handler.sendEmptyMessage(UPDATE_OK);
@@ -145,6 +158,24 @@ public class Order extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     handler.sendEmptyMessage(UPDATE_ERROR);
+                }
+            }
+        }).start();
+    }
+
+    void deleleOrder() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject req = new JSONObject();
+                    req.put("type", "OD");
+                    req.put("order_number", time);
+                    String rst = createData.post_m(req).get(0);
+                    if (rst.equals("true"))
+                        handler.sendEmptyMessage(DELETE_ORDER_OK);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -165,6 +196,7 @@ public class Order extends AppCompatActivity {
                         req.put("goods_id", list.get(i).getGoodsid());
                         req.put("shop_id", list.get(i).getShopid());
                         String rst = createData.post_m(req).get(0);
+                        i++;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
