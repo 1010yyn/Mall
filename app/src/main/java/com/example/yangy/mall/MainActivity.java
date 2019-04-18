@@ -201,7 +201,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("key", "Food");
+                //intent.putExtra("key", "Food");
+                intent.putExtra("key", "西瓜");
+                intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到食品类搜索结果页面");
                 startActivity(intent);
             }
@@ -210,7 +212,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("key", "Clothes");
+                //intent.putExtra("key", "Clothes");
+                intent.putExtra("key", "西瓜");
+                intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到衣饰类搜索结果页面");
                 startActivity(intent);
             }
@@ -219,7 +223,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("key", "Makeup");
+                //intent.putExtra("key", "Makeup");
+                intent.putExtra("key", "西瓜");
+                intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到美妆类搜索结果界面");
                 startActivity(intent);
             }
@@ -228,7 +234,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("key", "Exercise");
+                //intent.putExtra("key", "Exercise");
+                intent.putExtra("key", "西瓜");
+                intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到运动类搜索结果");
                 startActivity(intent);
             }
@@ -237,7 +245,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("key", "Furniture");
+                //intent.putExtra("key", "Furniture");
+                intent.putExtra("key", "西瓜");
+                intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到家居类搜索结果");
                 startActivity(intent);
             }
@@ -246,7 +256,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
-                intent.putExtra("key", "Electronic");
+                //intent.putExtra("key", "Electronic");
+                intent.putExtra("key", "西瓜");
+                intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到电子产品类搜索结果");
                 startActivity(intent);
             }
@@ -413,12 +425,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    protected void getData(final JSONObject req) {
+    protected void getData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
                 try {
+                    JSONObject req = new JSONObject();
+                    req.put("type", "CG");
+                    req.put("id", idOfuser);
                     ArrayList<String> rst = createData.post_m(req);
 
                     JSONObject goods;//存储查询商品简略信息
@@ -492,8 +507,8 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject goods = null;//存储查询商品简略信息
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean1;//临时商品信息
-                    Data_Cart_Bean.Data_Shop_Bean shop_bean1 = null;//临时店铺信息（主页用
-                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans1 = null;//临时商品列表（主页列表用
+                    Data_Cart_Bean.Data_Shop_Bean shop_bean1;//临时店铺信息（主页用
+                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans1;//临时商品列表（主页列表用
                     Data_Cart_Bean data_cart_bean1 = new Data_Cart_Bean();//网络请求成功返回的Bean对象(主页列表用
 
                     data_goods_beans1 = new ArrayList<>();//商店商品列表初始化
@@ -628,11 +643,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        JSONObject req = new JSONObject();
         try {
-            req.put("type", "CG");
-            req.put("id", idOfuser);
-            getData(req);//获取用户数据
+            flag_user = false;
+            flag_cart = false;
+            getData();//获取用户数据
         } catch (Exception e) {
             Log.e(TAG, "加载主界面失败");
             e.printStackTrace();

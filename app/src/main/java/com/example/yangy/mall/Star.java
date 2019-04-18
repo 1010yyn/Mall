@@ -2,18 +2,14 @@ package com.example.yangy.mall;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +88,13 @@ public class Star extends AppCompatActivity {
         bundle = intent.getExtras();
         id = bundle.getInt("id");
         Log.i(TAG, "跳转收藏夹界面");
+        TabHost tabHost = findViewById(android.R.id.tabhost);
+        tabHost.setup();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        inflater.inflate(R.layout.layout_star_goods, tabHost.getTabContentView());//设置商品选项卡
+        inflater.inflate(R.layout.layout_star_shop, tabHost.getTabContentView());//设置商店选项卡
+        tabHost.addTab(tabHost.newTabSpec("layout_star__goods").setIndicator("商品").setContent(R.id.star_left));
+        tabHost.addTab(tabHost.newTabSpec("layout_star__shop").setIndicator("商店").setContent(R.id.star_right));
         getData();
     }
 
@@ -193,13 +196,7 @@ public class Star extends AppCompatActivity {
     }
 
     void setData() {
-        TabHost tabHost = findViewById(android.R.id.tabhost);
-        tabHost.setup();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        inflater.inflate(R.layout.layout_star_goods, tabHost.getTabContentView());//设置商品选项卡
-        inflater.inflate(R.layout.layout_star_shop, tabHost.getTabContentView());//设置商店选项卡
-        tabHost.addTab(tabHost.newTabSpec("layout_star__goods").setIndicator("商品").setContent(R.id.star_left));
-        tabHost.addTab(tabHost.newTabSpec("layout_star__shop").setIndicator("商店").setContent(R.id.star_right));
+
         add_goods();//商品列表
         add_shop();//商店列表
     }
@@ -356,12 +353,6 @@ public class Star extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //getData();//获取信息
     }
 
     public void onBackPressed() {

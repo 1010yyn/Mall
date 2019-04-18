@@ -82,10 +82,18 @@ public class Hate extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
         setContentView(R.layout.layout_hate);
+        Intent intent = getIntent();
         bundle = intent.getExtras();
         id = bundle.getInt("id");
+        Log.i(TAG, "跳转黑名单界面");
+        TabHost tabHost = findViewById(android.R.id.tabhost);
+        tabHost.setup();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        inflater.inflate(R.layout.layout_hate_goods, tabHost.getTabContentView());//设置商品选项卡
+        inflater.inflate(R.layout.layout_hate_shop, tabHost.getTabContentView());//设置商店选项卡
+        tabHost.addTab(tabHost.newTabSpec("layout_hate__goods").setIndicator("商品").setContent(R.id.hate_left));
+        tabHost.addTab(tabHost.newTabSpec("layout_hate__shop").setIndicator("商店").setContent(R.id.hate_right));
         getData();
     }
 
@@ -189,13 +197,6 @@ public class Hate extends AppCompatActivity {
     }
 
     void setData() {
-        TabHost tabHost = findViewById(android.R.id.tabhost);
-        tabHost.setup();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        inflater.inflate(R.layout.layout_hate_goods, tabHost.getTabContentView());//设置商品选项卡
-        inflater.inflate(R.layout.layout_hate_shop, tabHost.getTabContentView());//设置商店选项卡
-        tabHost.addTab(tabHost.newTabSpec("layout_hate__goods").setIndicator("商品").setContent(R.id.hate_left));
-        tabHost.addTab(tabHost.newTabSpec("layout_hate__shop").setIndicator("商店").setContent(R.id.hate_right));
         //获取数据
         add_goods();//商品列表
         add_shop();//商店列表
@@ -352,12 +353,6 @@ public class Hate extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //getData();//获取信息
     }
 
     public void onBackPressed() {

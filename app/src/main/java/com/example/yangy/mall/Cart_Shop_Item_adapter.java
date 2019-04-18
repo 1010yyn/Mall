@@ -57,8 +57,8 @@ public class Cart_Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHol
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bt, 0, bt.length);
                 //填充商品内容
                 helper.setText(R.id.cart_shop_goods__name, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getGoodsname())
-                        .setText(R.id.cart_shop_goods__price, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPrice())
-                        .setText(R.id.cart_shop_goods__sum, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getSum())
+                        .setText(R.id.cart_shop_goods__price, "￥" + ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPrice())
+                        .setText(R.id.cart_shop_goods__sum, "x" + ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getSum())
                         .setImageBitmap(R.id.cart_shop_goods__photo, bitmap)
                         .setChecked(R.id.cart_shop_goods__selection, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getStatus())//初始状态设置为未选中
                         //给商品图片和商品名称添加子项单击事件

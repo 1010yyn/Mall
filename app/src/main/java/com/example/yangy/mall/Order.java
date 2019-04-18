@@ -33,6 +33,7 @@ public class Order extends AppCompatActivity {
     private int UPDATE_OK = 1;
     private int UPDATE_ERROR = 0;
     private int DELETE_ORDER_OK = 2;
+    private int DELETE_GOODS_OK = 3;
 
     private Intent intent;
     private Bundle bundle;
@@ -49,12 +50,13 @@ public class Order extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == UPDATE_OK) {
+            if (msg.what == UPDATE_OK)
                 deleteCart();//删除购物车商品
-                finish();
-            } else if (msg.what == UPDATE_ERROR) {
+            else if (msg.what == UPDATE_ERROR)
                 deleleOrder();//删除错误订单
-            } else if (msg.what == DELETE_ORDER_OK)
+            else if (msg.what == DELETE_ORDER_OK)
+                finish();
+            else if (msg.what == DELETE_GOODS_OK)
                 finish();
         }
     };
@@ -141,7 +143,7 @@ public class Order extends AppCompatActivity {
                         req = new JSONObject();
                         req.put("type", "OA");
                         req.put("id", id);
-                        req.put("order_number", time);
+                        req.put("order_number", time + id);
                         req.put("goods_id", list.get(i).getGoodsid());
                         req.put("shop_id", list.get(i).getShopid());
                         req.put("sum", list.get(i).getSum());
@@ -202,6 +204,7 @@ public class Order extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                handler.sendEmptyMessage(DELETE_GOODS_OK);
             }
         }).start();
     }
