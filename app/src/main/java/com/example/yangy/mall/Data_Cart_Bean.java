@@ -71,7 +71,7 @@ public class Data_Cart_Bean implements Serializable {
             private String goods_name;//商品名称
             private int price;//商品价格
             private String sum;//商品总数
-            private int photo;//商品图片资源id
+            private String photo;//商品图片资源
             private boolean isSelected;//是否被选中
             private String description;//商品描述
 
@@ -127,11 +127,11 @@ public class Data_Cart_Bean implements Serializable {
                 this.sum = sum;
             }
 
-            int getPhoto() {
+            String getPhoto() {
                 return photo;
             }
 
-            void setPhoto(int photo) {
+            void setPhoto(String photo) {
                 this.photo = photo;
             }
 

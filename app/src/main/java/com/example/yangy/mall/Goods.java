@@ -1,10 +1,13 @@
 package com.example.yangy.mall;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,7 +48,6 @@ public class Goods extends AppCompatActivity {
                 try {
                     JSONObject goods = new JSONObject(msg.obj.toString());
                     name1 = goods.getString("goods_name");
-                    //TODO——获取图片;
                     photo1 = goods.getString("photo");
                     price1 = goods.getString("price");
                     description1 = goods.getString("description");
@@ -105,12 +107,15 @@ public class Goods extends AppCompatActivity {
     }
 
     private void set() {
+        byte[] bt = Base64.decode(photo1, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bt, 0, bt.length);
+
         ImageView photo = findViewById(R.id.goods_photo);
         TextView name = findViewById(R.id.goods_name);
         TextView price = findViewById(R.id.goods_price);
         TextView description = findViewById(R.id.goods_description);
 
-        photo.setImageResource(getResources().getIdentifier(photo1, "drawable", getBaseContext().getPackageName()));
+        photo.setImageBitmap(bitmap);
         name.setText(name1);
         price.setText(price1);
         description.setText(description1);

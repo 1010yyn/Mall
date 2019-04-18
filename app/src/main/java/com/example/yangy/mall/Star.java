@@ -2,6 +2,8 @@ package com.example.yangy.mall;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +112,6 @@ public class Star extends AppCompatActivity {
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
                     Data_Cart_Bean.Data_Shop_Bean shop_bean;//临时店铺信息
                     List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans;//临时商品列表
-
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
                     data_goods_beans = new ArrayList<>();//商店商品列表初始化
@@ -126,7 +128,7 @@ public class Star extends AppCompatActivity {
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
                         goods_bean.setSum("");//设定数量（此处为空，收藏夹不需要显示数目
-                        goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
+                        goods_bean.setPhoto(goods.getString("photo"));//图片以string存储，ui更新时再转化为bitmap
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
                         data_goods_beans.add(goods_bean);

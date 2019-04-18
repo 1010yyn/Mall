@@ -124,7 +124,7 @@ public class Hate extends AppCompatActivity {
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
                         goods_bean.setSum("");//设定数量（此处为空，黑名单不需要显示数目
-                        goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
+                        goods_bean.setPhoto(goods.getString("photo"));//获取图片资源
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
                         data_goods_beans.add(goods_bean);

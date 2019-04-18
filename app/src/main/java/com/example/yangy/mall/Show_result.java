@@ -72,10 +72,6 @@ public class Show_result extends AppCompatActivity {
         id = bundle.getInt("id");
         String key = bundle.getString("key");
         Log.i(TAG, "成功跳转到搜索结果页面，本次搜索关键词为：" + key);
-        Query(key);
-    }
-
-    void setData() {
         TabHost tabHost = findViewById(android.R.id.tabhost);
         tabHost.setup();
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -83,8 +79,14 @@ public class Show_result extends AppCompatActivity {
         inflater.inflate(R.layout.layout_show_result__shop, tabHost.getTabContentView());//设置商店选项卡
         tabHost.addTab(tabHost.newTabSpec("layout_show_result__goods").setIndicator("商品").setContent(R.id.result_left));
         tabHost.addTab(tabHost.newTabSpec("layout_show_result__shop").setIndicator("商店").setContent(R.id.result_right));
+        Query(key);
+    }
+
+    void setData() {
+
         setGoods();
         setShop();
+        setSearch();
     }
 
     void setGoods() {
@@ -94,14 +96,14 @@ public class Show_result extends AppCompatActivity {
         //创建布局管理
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         list_goods.setLayoutManager(manager);
-        final Goods_Item_adapter adapter = new Goods_Item_adapter(list);
+        Goods_Item_adapter adapter_goods = new Goods_Item_adapter(list);
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         list_goods.addItemDecoration(divider);
 
-        list_goods.setAdapter(adapter);
+        list_goods.setAdapter(adapter_goods);
 
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        adapter_goods.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Log.i(TAG, "单击商品");
@@ -109,6 +111,7 @@ public class Show_result extends AppCompatActivity {
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                 bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                bundle.putInt("id", id);
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
@@ -123,26 +126,27 @@ public class Show_result extends AppCompatActivity {
         //创建布局管理
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         list_shop.setLayoutManager(manager);
-        final Shop_Item_adapter adapter = new Shop_Item_adapter(list);
+        Shop_Item_adapter adapter_shop = new Shop_Item_adapter(list);
         //设置列表分割线
         DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         list_shop.addItemDecoration(divider);
-        list_shop.setAdapter(adapter);
+        list_shop.setAdapter(adapter_shop);
 
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        adapter_shop.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Log.i(TAG, "单击商店");
                 intent1 = new Intent(Show_result.this, Shop.class);
                 bundle = new Bundle();//清空数据
-                bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
+                bundle.putCharSequence("shop_name", (String) adapter.getItem(position));
+                bundle.putInt("id", id);
                 intent1.putExtras(bundle);
                 startActivity(intent1);
             }
         });
     }
 
-    protected void search(String key) {
+    protected void setSearch() {
         final SearchView searchView = findViewById(R.id.result_search_bar);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -203,7 +207,7 @@ public class Show_result extends AppCompatActivity {
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
                         goods_bean.setSum("");//设定数量（此处为空，收藏夹不需要显示数目
-                        goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
+                        goods_bean.setPhoto(goods.getString("photo"));
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
                         data_goods_beans.add(goods_bean);

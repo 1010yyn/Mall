@@ -112,6 +112,7 @@ public class Order extends AppCompatActivity {
                 bundle = new Bundle();//清空数据
                 bundle.putCharSequence("shop_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getShopid());
                 bundle.putCharSequence("goods_id", ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(position)).getGoodsid());
+                bundle.putInt("id", id);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

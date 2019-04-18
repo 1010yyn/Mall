@@ -3,6 +3,7 @@ package com.example.yangy.mall;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
@@ -117,15 +118,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "开屏");
         setContentView(R.layout.layout_start);
         Log.i(TAG, "开屏停留3s");
-//        JSONObject req = new JSONObject();
-//        try {
-//            req.put("type", "CG");
-//            req.put("id", idOfuser + "");
-//            getData(req);//获取用户数据
-//        } catch (Exception e) {
-//            Log.e(TAG, "加载主界面失败");
-//            e.printStackTrace();
-//        }
     }
 
     void setData() {
@@ -426,7 +418,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans = new ArrayList<>();//临时店铺列表
-                List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans1 = new ArrayList<>();//临时店铺列表
                 try {
                     ArrayList<String> rst = createData.post_m(req);
 
@@ -434,14 +425,10 @@ public class MainActivity extends AppCompatActivity {
                     int shop = -1;//记录shopid，便于合并商品
 
                     Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean;//临时商品信息
-                    Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean1;//临时商品信息
                     Data_Cart_Bean.Data_Shop_Bean shop_bean = null;//临时店铺信息
-                    Data_Cart_Bean.Data_Shop_Bean shop_bean1 = null;//临时店铺信息（主页用
                     List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans = null;//临时商品列表
-                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans1 = null;//临时商品列表（主页列表用
 
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
-                    Data_Cart_Bean data_cart_bean1 = new Data_Cart_Bean();//网络请求成功返回的Bean对象(主页列表用
 
                     int i = 0;
                     while (i < rst.size()) {
@@ -454,20 +441,12 @@ public class MainActivity extends AppCompatActivity {
                             {//将商店加入购物车内商店列表
                                 shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
                                 data_shop_beans.add(shop_bean);//将商店加入购物车列表
-                                //主页
-                                shop_bean1.setGoodsData(data_goods_beans1);
-                                data_shop_beans1.add(shop_bean1);
                             }
                             //创建新商店和商店商品列表并初始化
                             data_goods_beans = new ArrayList<>();//商店商品列表初始化
                             shop_bean = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
                             shop_bean.setName(goods.getString("shop_name"));//设定商店名
                             shop_bean.setId(goods.getString("shop_id"));//设定商店id
-                            //主页设定
-                            data_goods_beans1 = new ArrayList<>();//商店商品列表初始化
-                            shop_bean1 = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
-                            shop_bean1.setName(goods.getString("shop_name"));//设定商店名
-                            shop_bean1.setId(goods.getString("shop_id"));//设定商店id
                             //更新当前商店id
                             shop = Integer.parseInt(goods.getString("shop_id"));
                         }
@@ -479,10 +458,50 @@ public class MainActivity extends AppCompatActivity {
                         goods_bean.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean.setPrice(goods.getInt("price"));//设定商品价格
                         goods_bean.setSum(goods.getString("sum"));//设定数量
-                        goods_bean.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
+                        goods_bean.setPhoto(goods.getString("photo"));//获取图片资源
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
                         data_goods_beans.add(goods_bean);//购物车
+                        i++;
+                    }
+                    //如果购物车非空
+                    if (rst.size() > 0) {
+                        //当前店铺还未进行加入购物车操作，跳出循环后继续
+                        shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
+                        data_shop_beans.add(shop_bean);//将商店加入购物车列表
+                        //将所有的店铺列表加入购物车
+                        data_cart_bean.setShopData(data_shop_beans);
+                        Message msg = Message.obtain();
+                        msg.obj = data_cart_bean;
+                        msg.what = GET_CART_OK;
+                        handler.sendMessage(msg);
+                    } else {
+                        handler.sendEmptyMessage(CART_EMPTY);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                List<Data_Cart_Bean.Data_Shop_Bean> data_shop_beans1 = new ArrayList<>();//临时店铺列表
+                //获取首页商品列表
+                try {
+                    JSONObject req = new JSONObject();
+                    req.put("type", "HG");
+                    ArrayList<String> rst = createData.post_m(req);
+
+                    JSONObject goods = null;//存储查询商品简略信息
+
+                    Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean goods_bean1;//临时商品信息
+                    Data_Cart_Bean.Data_Shop_Bean shop_bean1 = null;//临时店铺信息（主页用
+                    List<Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean> data_goods_beans1 = null;//临时商品列表（主页列表用
+                    Data_Cart_Bean data_cart_bean1 = new Data_Cart_Bean();//网络请求成功返回的Bean对象(主页列表用
+
+                    data_goods_beans1 = new ArrayList<>();//商店商品列表初始化
+                    shop_bean1 = new Data_Cart_Bean.Data_Shop_Bean();//商店信息初始化
+
+                    int i = 0;
+                    while (i < rst.size()) {
+                        goods = new JSONObject(rst.get(i));//转换数据
                         //主页
                         goods_bean1 = new Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean();
                         goods_bean1.setShopname(goods.getString("shop_name"));//设定商店名称
@@ -491,38 +510,29 @@ public class MainActivity extends AppCompatActivity {
                         goods_bean1.setGoodsid(goods.getString("goods_id"));//设定商品id
                         goods_bean1.setPrice(goods.getInt("price"));//设定商品价格
                         goods_bean1.setSum("");//设定数量为空
-                        goods_bean1.setPhoto(getResources().getIdentifier(goods.getString("photo"), "drawable", getPackageName()));
+                        goods_bean1.setPhoto(goods.getString("photo"));//获取图片资源
                         goods_bean1.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
                         data_goods_beans1.add(goods_bean1);//主页展示列表
                         i++;
                     }
-                    //如果购物车非空
+                    //主页
                     if (rst.size() > 0) {
-                        //当前店铺还未进行加入购物车操作，跳出循环后继续
-                        shop_bean.setGoodsData(data_goods_beans);//将商品列表加入店铺信息
-                        data_shop_beans.add(shop_bean);//将商店加入购物车列表
-                        shop_bean1.setGoodsData(data_goods_beans1);//主页
-                        data_shop_beans1.add(shop_bean1);//主页
+                        shop_bean1.setName(goods.getString("shop_name"));//设定商店名
+                        shop_bean1.setId(goods.getString("shop_id"));//设定商店id
+                        shop_bean1.setGoodsData(data_goods_beans1);//将商品列表加入店铺信息
+                        data_shop_beans1.add(shop_bean1);//将商店加入购物车列表
                         //将所有的店铺列表加入购物车
-                        data_cart_bean.setShopData(data_shop_beans);
-                        Message msg = Message.obtain();
-                        msg.obj = data_cart_bean;
-                        msg.what = GET_CART_OK;
-                        handler.sendMessage(msg);
-                        //主页
                         data_cart_bean1.setShopData(data_shop_beans1);
-                        msg = Message.obtain();
+                        Message msg = Message.obtain();
                         msg.obj = data_cart_bean1;
                         msg.what = GET_HOME_OK;
                         handler.sendMessage(msg);
-                    } else {
-                        handler.sendEmptyMessage(CART_EMPTY);
                     }
-                } catch (JSONException e) {
-                    Log.e(TAG, "解析购物车数据错误" + e.getMessage());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 //获取用户头像和昵称
                 try {
                     JSONObject req = new JSONObject();

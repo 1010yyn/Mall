@@ -1,6 +1,9 @@
 package com.example.yangy.mall;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -40,6 +43,7 @@ public class Cart_Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, final Object item) {
+
         // 第三步：设置不同布局下的组件数据
         switch (helper.getItemViewType()) {
             case ITEM_TITLE:
@@ -48,11 +52,14 @@ public class Cart_Shop_Item_adapter extends BaseQuickAdapter<Object, BaseViewHol
                         .addOnClickListener(R.id.cart_shop_title__title);   //给店铺名添加点击事件
                 break;
             case ITEM_CONTENT:
+                //图片预处理
+                byte[] bt = Base64.decode(((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPhoto(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bt, 0, bt.length);
                 //填充商品内容
                 helper.setText(R.id.cart_shop_goods__name, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getGoodsname())
                         .setText(R.id.cart_shop_goods__price, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPrice())
                         .setText(R.id.cart_shop_goods__sum, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getSum())
-                        .setImageResource(R.id.cart_shop_goods__photo, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPhoto())
+                        .setImageBitmap(R.id.cart_shop_goods__photo, bitmap)
                         .setChecked(R.id.cart_shop_goods__selection, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getStatus())//初始状态设置为未选中
                         //给商品图片和商品名称添加子项单击事件
                         .addOnClickListener(R.id.cart_shop_goods__name)

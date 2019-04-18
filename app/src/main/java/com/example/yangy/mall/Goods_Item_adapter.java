@@ -1,6 +1,9 @@
 package com.example.yangy.mall;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 import android.util.Log;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -46,11 +49,14 @@ public class Goods_Item_adapter extends BaseQuickAdapter<Object, BaseViewHolder>
                 // 空布局，不显示信息
                 break;
             case ITEM_CONTENT:
+                //对图片预处理
+                byte[] bt = Base64.decode(((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPhoto(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bt, 0, bt.length);
                 //填充商品内容
                 helper.setText(R.id.shop_goods__name, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getGoodsname())
                         .setText(R.id.shop_goods__price, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPrice())
                         .setText(R.id.shop_goods__sum, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getSum())
-                        .setImageResource(R.id.shop_goods__photo, ((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) item).getPhoto());
+                        .setImageBitmap(R.id.shop_goods__photo, bitmap);
                 break;
         }
     }
