@@ -3,7 +3,6 @@ package com.example.yangy.mall;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
@@ -117,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "开屏");
         setContentView(R.layout.layout_start);
-        Log.i(TAG, "开屏停留3s");
+        intent = getIntent();
+        bundle = intent.getExtras();
+        idOfuser = bundle.getInt("id");
     }
 
     void setData() {
@@ -202,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 //intent.putExtra("key", "Food");
-                intent.putExtra("key", "西瓜");
+                intent.putExtra("key", "食品");
                 intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到食品类搜索结果页面");
                 startActivity(intent);
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 //intent.putExtra("key", "Clothes");
-                intent.putExtra("key", "西瓜");
+                intent.putExtra("key", "衣饰");
                 intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到衣饰类搜索结果页面");
                 startActivity(intent);
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 //intent.putExtra("key", "Makeup");
-                intent.putExtra("key", "西瓜");
+                intent.putExtra("key", "美妆");
                 intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到美妆类搜索结果界面");
                 startActivity(intent);
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 //intent.putExtra("key", "Exercise");
-                intent.putExtra("key", "西瓜");
+                intent.putExtra("key", "运动");
                 intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到运动类搜索结果");
                 startActivity(intent);
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 //intent.putExtra("key", "Furniture");
-                intent.putExtra("key", "西瓜");
+                intent.putExtra("key", "家居");
                 intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到家居类搜索结果");
                 startActivity(intent);
@@ -257,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, Show_result.class);//为搜索结果界面创建intent
                 //intent.putExtra("key", "Electronic");
-                intent.putExtra("key", "西瓜");
+                intent.putExtra("key", "电子");
                 intent.putExtra("id", idOfuser);
                 Log.i(TAG, "正在跳转页面到电子产品类搜索结果");
                 startActivity(intent);
@@ -633,10 +634,7 @@ public class MainActivity extends AppCompatActivity {
             bundle = data.getExtras();
             head.setImageResource(getResources().getIdentifier(bundle.getString("head"), "drawable", getBaseContext().getPackageName()));//重新设置头像
             name.setText(bundle.getString("nick"));
-        } else if (reQuestCode == REQUEST_CODE && resultCode == Login.REQUEST_CODE) {
-            Log.i(TAG, "登录成功！");
-            bundle = data.getExtras();
-            idOfuser = Integer.valueOf(bundle.getString("id"));//获取用户id;
+            idOfuser = bundle.getInt("idOfuser");//获取用户id;
         }
     }
 
