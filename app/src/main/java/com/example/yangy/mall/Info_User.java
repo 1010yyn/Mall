@@ -146,6 +146,7 @@ public class Info_User extends AppCompatActivity {
     public void onBackPressed() {
         Log.i(TAG, "点击返回键");
         Intent intent1 = new Intent(Info_User.this, MainActivity.class);
+        bundle.putInt("idOfuser", idofUser);
         setResult(REQUEST_CODE, intent1.putExtras(bundle));
         finish();
     }

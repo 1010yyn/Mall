@@ -23,8 +23,8 @@ import java.util.ArrayList;
 public class CreateData extends Activity {
 
     //private String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
-    private String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
-    //private String strUrl = "http://172.22.57.245:8080/MyServer/server_servlet";//图书馆
+    //private String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
+    private String strUrl = "http://172.22.67.222:8080/MyServer/server_servlet";//图书馆
 
     private String TAG = "MYTAG";
 

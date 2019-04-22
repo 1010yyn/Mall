@@ -5,6 +5,9 @@
     <string name="Login">登录</string>
     <string name="Register">注册</string>
     <string name="Password">密码</string>
+    <string name="User">用户</string>
+    <string name="Shopkeeper">商家</string>
+    <string name="Shop_name">店铺名称</string>
 
     <!--购物车-->
     <string name="Cart">购物车</string>
@@ -47,5 +50,18 @@
     <string name="G_hate">加入黑名单</string>
     <string name="G_cart">加入购物车</string>
     <string name="G_shop">进入店铺</string>
+
+    <!--商店管理-->
+    <string name="S_M_Manage">管理商店</string>
+    <string name="S_M_Add">添加</string>
+    <string name="S_M_Delete">删除</string>
+
+    <!--商品管理-->
+    <string name="G_M_Tag">商品标签</string>
+    <string name="G_M_Name">商品名称</string>
+    <string name="G_M_Price">商品价格</string>
+    <string name="G_M_Sum">商品数量</string>
+    <string name="G_M_Description">商品描述</string>
+    <string name="G_M_Confirm">确认信息</string>
 
 </resources>

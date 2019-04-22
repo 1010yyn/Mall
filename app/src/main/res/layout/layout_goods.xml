@@ -12,7 +12,9 @@
         android:id="@+id/goods_photo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/Height_goods"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:padding="@dimen/sp_12"
+        android:src="@drawable/sample_goods_image" />
 
     <TextView
         android:layout_width="wrap_content"

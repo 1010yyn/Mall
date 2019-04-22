@@ -14,20 +14,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Order"></activity>
-        <activity android:name=".Login" />
-        <activity android:name=".Hate" />
-        <activity android:name=".Star" />
-        <activity android:name=".Shop" />
-        <activity android:name=".Info_User_Modify_Head" />
-        <activity android:name=".Info_User_Modify" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Goods_Manager"></activity>
+        <activity android:name=".Shop_Manager" />
+        <activity android:name=".Order" />
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Hate" />
+        <activity android:name=".Star" />
+        <activity android:name=".Shop" />
+        <activity android:name=".Info_User_Modify_Head" />
+        <activity android:name=".Info_User_Modify" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".Show_result" />
         <activity android:name=".Goods" />
         <activity android:name=".Info_User" />

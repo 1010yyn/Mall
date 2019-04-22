@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity {
     private EditText name, password;
     private Switch aSwitch, aSwitch1;
 
-    String Name, Password;
+    String Name, Password, Shop_name;
 
     private Boolean flag = false;//T——注册，F——登录
     private Boolean flag1 = false;//T——商家，F——用户
@@ -51,18 +51,22 @@ public class Login extends AppCompatActivity {
             if (msg.what == LOGIN_OK) {
                 //账号登录正确，跳转
                 Toast.makeText(Login.this, "登录成功！", Toast.LENGTH_SHORT).show();
-                int id = Integer.valueOf(msg.obj.toString());
-                //TODO——跳转区分一下
-                if (flag1) {
-                    intent = new Intent(Login.this, Shop_Manager.class);
-                    Log.i(TAG, "handleMessage: 商家");
-                } else {
-                    intent = new Intent(Login.this, MainActivity.class);
-                    Log.i(TAG, "handleMessage: 用户");
+                try {
+                    JSONObject js = new JSONObject(msg.obj.toString());
+                    if (flag1) {
+                        intent = new Intent(Login.this, Shop_Manager.class);
+                        Log.i(TAG, "handleMessage: 商家");
+                        bundle.putString("shop_name", js.getString("shop_name"));//商店名称
+                    } else {
+                        intent = new Intent(Login.this, MainActivity.class);
+                        Log.i(TAG, "handleMessage: 用户");
+                    }
+                    bundle.putInt("id", js.getInt("id"));
+                    startActivity(intent.putExtras(bundle));
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                bundle.putInt("id", id);
-                //startActivity(intent.putExtras(bundle));
-                //finish();
             } else if (msg.what == REGIST_OK) {
                 Toast.makeText(Login.this, "注册成功！请重新登录！", Toast.LENGTH_SHORT).show();
                 password.setText("");//密码清空
@@ -111,109 +115,113 @@ public class Login extends AppCompatActivity {
                 //获取数据
                 Name = name.getText().toString();
                 Password = password.getText().toString();
-                if (flag) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (flag1) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-                                    builder.setTitle("请完善商家信息");
-                                    //通过LayoutInflater来加载一个xml的布局文件作为一个View对象
-                                    View view = LayoutInflater.from(Login.this).inflate(R.layout.layout_login__shopkeeper, null);
-                                    //设置我们自己定义的布局文件作为弹出框的Content
-                                    builder.setView(view);
+                Log.i(TAG, Name);
+                if (flag) {//注册
+                    if (flag1) {//商家
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                        builder.setTitle("请完善商家信息");
+                        //通过LayoutInflater来加载一个xml的布局文件作为一个View对象
+                        View view = LayoutInflater.from(Login.this).inflate(R.layout.layout_login__shopkeeper, null);
+                        //设置我们自己定义的布局文件作为弹出框的Content
+                        builder.setView(view);
 
-                                    final TextView shop_userid = findViewById(R.id.login_shop_userid);
-                                    final EditText shop_username = findViewById(R.id.login_shop_username);
-                                    final EditText shop_userphone = findViewById(R.id.login_shop_userphone);
+                        final TextView shop_userid = view.findViewById(R.id.login_shop_userid);
+                        final EditText shop_username = view.findViewById(R.id.login_shop_username);
+                        final EditText shop_userphone = view.findViewById(R.id.login_shop_userphone);
 
-                                    //shop_userid.setText(Name);//设定id，不允许编辑
+                        shop_userid.setText(Name);//设定id，不允许编辑
 
-                                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            JSONObject req = new JSONObject();
-                                            try {
-                                                req.put("type", "UA");
-                                                req.put("table", "info_shop");//商家
-                                                req.put("name", Name);//id
-                                                req.put("password", Password);
-                                                req.put("phone", shop_userphone.getText());
-                                                req.put("address", " ");
-                                                req.put("head", "head1");
-                                                req.put("nick", shop_username.getText());
-
-                                                String rst = createData.post_m(req).get(0);
-                                                if (rst.equals("false"))//注册失败
-                                                    handler.sendEmptyMessage(REGIST_ERROR);
-                                                else if (rst.equals("true"))//注册成功
-                                                    handler.sendEmptyMessage(REGIST_OK);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    });
-                                    builder.show();//TODO——主线程安全
-
-                                } else {
-                                    JSONObject req = new JSONObject();
-                                    req.put("table", "info_user");//用户
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                JSONObject req = new JSONObject();
+                                try {
                                     req.put("type", "UA");
-                                    req.put("name", Name);
+                                    req.put("table", "info_shop");//商家
+                                    req.put("name", Name);//id
                                     req.put("password", Password);
-                                    req.put("phone", " ");
+                                    req.put("phone", shop_userphone.getText().toString());
                                     req.put("address", " ");
                                     req.put("head", "head1");
-                                    req.put("nick", Name);
-
-                                    String rst = createData.post_m(req).get(0);
-                                    if (rst.equals("false"))//注册失败
-                                        handler.sendEmptyMessage(REGIST_ERROR);
-                                    else if (rst.equals("true"))//注册成功
-                                        handler.sendEmptyMessage(REGIST_OK);
+                                    req.put("nick", shop_username.getText().toString());
+                                    regist(req);//进行注册
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Log.i(TAG, e.getMessage());
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                        });
+                        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "取消注册");//不做操作
+                                dialog.dismiss();//关闭对话框
+                            }
+                        });
+                        builder.create().show();
+                    } else {//用户
+                        JSONObject req = new JSONObject();
+                        try {
+                            req.put("table", "info_user");//用户
+                            req.put("type", "UA");
+                            req.put("name", Name);
+                            req.put("password", Password);
+                            req.put("phone", " ");
+                            req.put("address", " ");
+                            req.put("head", "head1");
+                            req.put("nick", Name);
+                            regist(req);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }).start();
+                    }
                 } else {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            JSONObject req = new JSONObject();
-                            try {
-                                if (flag1)
-                                    req.put("table", 1);//商家
-                                else
-                                    req.put("table", 0);//用户
-                                req.put("type", "UL");
-                                req.put("name", Name);
-                                req.put("password", Password);
-                                String rst = createData.post_m(req).get(0);
-                                if (rst.equals("false"))//登录失败
-                                    handler.sendEmptyMessage(LOGIN_ERROR);
-                                else {
-                                    Message msg = Message.obtain();
-                                    msg.what = LOGIN_OK;
-                                    msg.obj = rst;
-                                    handler.sendMessage(msg);//登录成功，准备跳转activity
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
-
+                    login();//登录
                 }
             }
         });
     }
+
+    void login() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject req = new JSONObject();
+                try {
+                    if (flag1)
+                        req.put("table", "info_shop");//商家
+                    else
+                        req.put("table", "info_user");//用户
+                    req.put("type", "UL");
+                    req.put("name", Name);
+                    req.put("password", Password);
+                    String rst = createData.post_m(req).get(0);
+                    if (rst.equals("false"))//登录失败
+                        handler.sendEmptyMessage(LOGIN_ERROR);
+                    else {
+                        Message msg = Message.obtain();
+                        msg.what = LOGIN_OK;
+                        msg.obj = rst;
+                        handler.sendMessage(msg);//登录成功，准备跳转activity
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    void regist(final JSONObject req) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String rst = createData.post_m(req).get(0);
+                if (rst.equals("false"))//注册失败
+                    handler.sendEmptyMessage(REGIST_ERROR);
+                else if (rst.equals("true"))//注册成功
+                    handler.sendEmptyMessage(REGIST_OK);
+            }
+        }).start();
+    }
+
 }

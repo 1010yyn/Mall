@@ -4,41 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Shop">
+    tools:context=".Shop_Manager">
 
     <TextView
+        android:id="@+id/manager_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/shop_name"
-        android:text="店铺名"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/sp_16" />
+        android:padding="@dimen/sp_16"
+        android:text="店铺名" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/manager_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/manager_name"></android.support.v7.widget.RecyclerView>
 
     <Button
-        android:id="@+id/shop_star"
+        android:id="@+id/manager_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:text="@string/G_star" />
+        android:text="@string/S_M_Delete" />
 
     <Button
-        android:id="@+id/shop_hate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/manager_add"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/G_hate" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/shop_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/shop_hate"
-        android:layout_below="@id/shop_name"></android.support.v7.widget.RecyclerView>
-
+        android:text="@string/S_M_Add" />
 
 </RelativeLayout>

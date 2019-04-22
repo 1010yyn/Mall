@@ -94,7 +94,6 @@ public class Info_User_Modify_Head extends AppCompatActivity {
                 Log.i(TAG, "确认修改头像");//删除该条记录
                 bundle.putCharSequence("head", choice);
                 setResult(REQUEST_CODE, intent.putExtras(bundle));//返回头像ID
-
                 finish();
             }
         });

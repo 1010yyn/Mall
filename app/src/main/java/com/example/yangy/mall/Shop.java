@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -52,8 +53,10 @@ public class Shop extends AppCompatActivity {
                 Toast.makeText(Shop.this, "加入收藏夹成功", Toast.LENGTH_SHORT).show();
             else if (msg.what == ADD_HATE_OK)
                 Toast.makeText(Shop.this, "加入黑名单成功", Toast.LENGTH_SHORT).show();
-            else if (msg.what == SHOP_EMPTY)
+            else if (msg.what == SHOP_EMPTY) {
                 data_cart_bean = null;
+                setData();//加载信息
+            }
         }
     };
 
@@ -209,6 +212,9 @@ public class Shop extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+
+        TextView name = findViewById(R.id.shop_name);
+        name.setText(shop_name);
     }
 
     public void onBackPressed() {
