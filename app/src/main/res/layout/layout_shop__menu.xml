@@ -1,40 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="250dp"
     android:layout_height="match_parent">
 
     <item
-        android:id="@+id/info_user"
+        android:id="@+id/info_shop"
         android:checkable="true"
         android:icon="@drawable/c_fur"
         android:title="@string/M_info_user" />
 
     <item
-        android:id="@+id/star"
-        android:checkable="true"
-        android:icon="@drawable/c_fur"
-        android:title="@string/M_star" />
-
-    <item
-        android:id="@+id/hate"
-        android:checkable="true"
-        android:icon="@drawable/c_fur"
-        android:title="@string/M_hate" />
-
-    <item
-        android:id="@+id/order"
+        android:id="@+id/shop_order"
         android:checkable="true"
         android:icon="@drawable/c_fur"
         android:title="@string/M_order" />
 
     <item
-        android:id="@+id/change_user"
+        android:id="@+id/change_shop"
         android:checkable="true"
         android:icon="@drawable/c_fur"
         android:title="@string/M_change_user" />
 
     <item
-        android:id="@+id/quit"
+        android:id="@+id/quit_shop"
         android:checkable="true"
         android:icon="@drawable/c_fur"
         android:title="@string/M_quit" />

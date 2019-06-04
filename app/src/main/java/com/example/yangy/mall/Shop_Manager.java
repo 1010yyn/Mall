@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +14,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -26,6 +32,7 @@ import java.util.List;
 public class Shop_Manager extends AppCompatActivity {
 
     private final static String TAG = "MYTAG";
+    public final static int REQUEST_CODE = 12;//请求标识
 
     private int GET_SHOP_OK = 1;
     private int DLT_SHOP_OK = 2;//删除购物车数据OK
@@ -33,10 +40,20 @@ public class Shop_Manager extends AppCompatActivity {
     private int ADD_ERROR = 0;
 
     private Bundle bundle = new Bundle();
+    private Intent intent;
     private Intent intent1;
 
     private String shop_name;
     private int id;
+
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private TextView name;//侧边栏用户昵称
+    private ImageView head;//侧边栏用户头像
+
+    //侧边栏用户名,头像文件名
+    String name1, head_Name = "head1";
+    int head1;
 
     private CreateData createData = new CreateData();
 
@@ -53,19 +70,71 @@ public class Shop_Manager extends AppCompatActivity {
                 data_cart_bean = null;
                 setData();//加载信息
             }
-
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_shop__manager);
-        Intent intent = getIntent();
+        intent = getIntent();
         bundle = intent.getExtras();
         id = bundle.getInt("id");//shop_id
         shop_name = bundle.getString("shop_name");//获取商店name
         Log.i(TAG, "成功跳转商店管理界面");
+    }
+
+    void homepage() {
+        Log.i(TAG, "加载商店管理主界面");
+        setContentView(R.layout.layout_shop__manager);
+
+        //侧边栏头像id
+        head1 = getResources().getIdentifier(head_Name, "drawable", getBaseContext().getPackageName());
+        name1 = shop_name;
+
+        //侧边栏
+        drawerLayout = findViewById(R.id.shop_page);
+        navigationView = findViewById(R.id.nav_shop);
+        head = navigationView.getHeaderView(0).findViewById(R.id.header_head);
+        name = navigationView.getHeaderView(0).findViewById(R.id.header_name);
+        name.setText(name1);
+        head.setImageResource(head1);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Toast.makeText(Shop_Manager.this, item.getTitle().toString(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "点击" + item.getTitle().toString());
+                switch (item.getTitle().toString()) {
+                    case "个人信息":
+                        intent = new Intent(Shop_Manager.this, Info_User.class);//为个人信息界面创建intent
+                        intent.putExtra("id", id);
+                        Log.i(TAG, "正在跳转页面到个人信息页面");
+                        startActivityForResult(intent, REQUEST_CODE);
+                        break;
+                    case "订单中心":
+                        intent = new Intent(Shop_Manager.this, Shop_Order.class);
+                        intent.putExtra("id", id);//商户id
+                        intent.putExtra("shop_name", shop_name);//商户名
+                        Log.i(TAG, "正在跳转至订单界面");
+                        startActivity(intent);
+                        break;
+                    case "切换用户":
+                        Log.i(TAG, "切换用户");
+                        intent = new Intent(Shop_Manager.this, Login.class);
+                        Log.i(TAG, "正在跳转至登陆界面");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case "退出":
+                        Log.i(TAG, "退出App");
+                        onDestroy();
+                        break;
+                }
+                drawerLayout.closeDrawer(navigationView);//关闭菜单
+                return true;
+            }
+        });
+
+
     }
 
     void getData() {
@@ -128,6 +197,7 @@ public class Shop_Manager extends AppCompatActivity {
     }
 
     void setData() {
+        homepage();
         //获取recycleview
         RecyclerView list_manager = findViewById(R.id.manager_list);
         // 将网络请求获取到的json字符串转成的对象进行二次重组，生成集合List<Object>

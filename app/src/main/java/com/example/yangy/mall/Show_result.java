@@ -83,7 +83,6 @@ public class Show_result extends AppCompatActivity {
     }
 
     void setData() {
-
         setGoods();
         setShop();
         setSearch();

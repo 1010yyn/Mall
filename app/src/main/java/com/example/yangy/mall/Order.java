@@ -79,7 +79,7 @@ public class Order extends AppCompatActivity {
 
         Calendar cld = Calendar.getInstance();
         cld.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));//设置时区
-        time = String.valueOf(cld.get(Calendar.YEAR)) + String.valueOf(cld.get(Calendar.MONTH) + 1) + String.valueOf(cld.get(Calendar.DATE)) + String.valueOf(cld.get(Calendar.HOUR) + 12) + String.valueOf(cld.get(Calendar.MINUTE)) + String.valueOf(cld.get(Calendar.SECOND)) + String.valueOf(cld.get(Calendar.MILLISECOND));
+        time = cld.get(Calendar.YEAR) + String.valueOf(cld.get(Calendar.MONTH) + 1) + cld.get(Calendar.DATE) + String.valueOf(cld.get(Calendar.HOUR) + 12) + cld.get(Calendar.MINUTE) + cld.get(Calendar.SECOND) + cld.get(Calendar.MILLISECOND);
 
         setData();//填充订单信息
         Button pay = findViewById(R.id.order_pay);
@@ -89,7 +89,6 @@ public class Order extends AppCompatActivity {
                 updateData();//确认支付时，添加订单
             }
         });
-
     }
 
     void setData() {
@@ -125,9 +124,21 @@ public class Order extends AppCompatActivity {
         TextView Address = findViewById(R.id.order_address);
         Address.setText("地址：" + address);
 
+        //设定收货人姓名
+        String username = bundle.getString("nick");
+        TextView Nick = findViewById(R.id.order_name);
+        Nick.setText("收货人：" + username);
+
+        //设定收货人手机号码
+        String phone = bundle.getString("phone");
+        TextView Phone = findViewById(R.id.order_phone);
+        Phone.setText("手机号码：" + phone);
+
         //显示订单编号
         TextView number = findViewById(R.id.order_number);
         number.setText("订单编号：" + time);
+
+
     }
 
     //订单信息记录到数据库

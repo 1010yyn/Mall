@@ -1,60 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Order"
-    android:orientation="vertical">
+    tools:context=".Shop_Order_Handle">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/order_list"></android.support.v7.widget.RecyclerView>
+        android:id="@+id/shop_order_list"></android.support.v7.widget.RecyclerView>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/order_name"
-        android:layout_below="@id/order_list" />
+        android:id="@+id/shop_order_name"
+        android:layout_below="@id/shop_order_list" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/order_phone"
-        android:layout_below="@id/order_name" />
+        android:id="@+id/shop_order_phone"
+        android:layout_below="@id/shop_order_name" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/order_address"
-        android:layout_below="@id/order_phone" />
+        android:id="@+id/shop_order_address"
+        android:layout_below="@id/shop_order_phone" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/order_number"
-        android:layout_below="@id/order_address"
-        android:layout_above="@id/order_menu" />
+        android:id="@+id/shop_order_number"
+        android:layout_below="@id/shop_order_address"
+        android:layout_above="@id/shop_order_menu" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/order_menu">
+        android:id="@+id/shop_order_menu">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/order_sum"
+            android:id="@+id/shop_order_sum"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/order_pay"
-            android:text="@string/Pay"
+            android:id="@+id/shop_order_send"
+            android:text="@string/Send"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 

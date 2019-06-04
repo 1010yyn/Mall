@@ -194,11 +194,11 @@ public class Goods extends AppCompatActivity {
                     public void run() {
                         JSONObject req = new JSONObject();
                         try {
-                            req.put("type", "CA");
-                            req.put("id", id);
-                            req.put("shop_id", shop_id);
-                            req.put("goods_id", goods_id);
-                            req.put("sum", "1");
+                            req.put("type", "CA");//请求类型：CA（cart_add）
+                            req.put("id", id);//用户id
+                            req.put("shop_id", shop_id);//商品所属商店id
+                            req.put("goods_id", goods_id);//商品id
+                            req.put("sum", "1");//商品数量
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

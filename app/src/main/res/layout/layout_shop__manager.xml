@@ -1,42 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shop_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Shop_Manager">
 
-    <TextView
-        android:id="@+id/manager_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:padding="@dimen/sp_16"
-        android:text="店铺名" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/manager_list"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/manager_name"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/manager_delete"
+        <TextView
+            android:id="@+id/manager_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/sp_16"
+            android:text="店铺名" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/manager_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/manager_name"></android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/manager_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/S_M_Delete" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/manager_add"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/S_M_Add" />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/nav_shop"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/S_M_Delete" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/layout_main_header"
+        app:menu="@layout/layout_shop__menu">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/manager_add"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/S_M_Add" />
+    </android.support.design.widget.NavigationView>
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

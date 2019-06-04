@@ -64,6 +64,7 @@ public class Info_User extends AppCompatActivity {
         bundle = intent.getExtras();
         idofUser = bundle.getInt("id");
         Log.i(TAG, "成功跳转到个人信息页面");
+        //TODO——商户信息
         //获取用户信息
         final JSONObject req = new JSONObject();
         try {

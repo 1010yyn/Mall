@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView name;//侧边栏用户昵称
     private ImageView head;//侧边栏用户头像
 
-    //侧边栏用户名,头像文件名
-    String name1, head_Name;
+    //侧边栏用户名,头像文件名，用户手机号（订单需要）
+    String name1, head_Name, phone;
     int head1;
 
     private AlertDialog.Builder delete_cart;//确认删除购物车商品对话框
@@ -88,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
             } else if (msg.what == GET_USER_OK) {
                 try {
                     JSONObject js = new JSONObject(msg.obj.toString());
-                    name1 = js.getString("name");
+                    name1 = js.getString("nick");
                     head_Name = js.getString("head");
                     address = js.getString("address");
+                    phone = js.getString("phone");
                     flag_user = true;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -164,6 +165,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "正在跳转页面到黑名单页面");
                         startActivity(intent);
                         break;
+                    case "订单中心":
+                        intent = new Intent(MainActivity.this, User_Order.class);//为个人信息界面创建intent
+                        intent.putExtra("id", idOfuser);
+                        Log.i(TAG, "正在跳转页面到订单中心页面");
+                        startActivity(intent);
+                        break;
                     case "切换用户":
                         Log.i(TAG, "切换用户");
                         intent = new Intent(MainActivity.this, Login.class);
@@ -172,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                         break;
                     case "退出":
-                        Log.i(TAG, "退出App");
+                        Log.i(TAG, "再按一次退出APP");
                         onDestroy();
                         break;
                 }
@@ -417,9 +424,12 @@ public class MainActivity extends AppCompatActivity {
                             rst.add((Data_Cart_Bean.Data_Shop_Bean.Data_Goods_Bean) adapter.getItem(i));//加入列表
                 intent = new Intent(MainActivity.this, Order.class);
                 bundle = new Bundle();//清空数据
+                bundle.putString("type", "user");
                 bundle.putSerializable("list", rst);
                 bundle.putString("address", address);
                 bundle.putInt("id", idOfuser);
+                bundle.putString("nick", name1);
+                bundle.putString("phone", phone);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -446,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Data_Cart_Bean data_cart_bean = new Data_Cart_Bean();//网络请求成功返回的Bean对象
 
-                    int i = 0;
+                    int i = 0;//记录数量
                     while (i < rst.size()) {
                         goods = new JSONObject(rst.get(i));//转换数据
                         //判定是否同一家店商品
@@ -477,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
                         goods_bean.setPhoto(goods.getString("photo"));//获取图片资源
                         goods_bean.setDescription(goods.getString("description"));//设定商品描述
                         //添加商品至临时商品列表
-                        data_goods_beans.add(goods_bean);//购物车
+                        data_goods_beans.add(goods_bean);
                         i++;
                     }
                     //如果购物车非空
