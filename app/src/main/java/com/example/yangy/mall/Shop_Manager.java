@@ -37,6 +37,7 @@ public class Shop_Manager extends AppCompatActivity {
     private int GET_SHOP_OK = 1;
     private int DLT_SHOP_OK = 2;//删除购物车数据OK
     private int SHOP_EMPTY = 3;
+    private int GET_INFO_OK = 4;
     private int ADD_ERROR = 0;
 
     private Bundle bundle = new Bundle();
@@ -68,7 +69,15 @@ public class Shop_Manager extends AppCompatActivity {
                 setData();//加载信息
             } else if (msg.what == SHOP_EMPTY) {
                 data_cart_bean = null;
-                setData();//加载信息
+            } else if (msg.what == GET_INFO_OK) {
+                try {
+                    JSONObject js = new JSONObject(msg.obj.toString());
+                    name1 = js.getString("nick");
+                    head_Name = js.getString("head");
+                    setData();//加载信息
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     };
@@ -107,6 +116,7 @@ public class Shop_Manager extends AppCompatActivity {
                     case "个人信息":
                         intent = new Intent(Shop_Manager.this, Info_User.class);//为个人信息界面创建intent
                         intent.putExtra("id", id);
+                        intent.putExtra("type", "shop");
                         Log.i(TAG, "正在跳转页面到个人信息页面");
                         startActivityForResult(intent, REQUEST_CODE);
                         break;
@@ -189,6 +199,21 @@ public class Shop_Manager extends AppCompatActivity {
                         msg.what = GET_SHOP_OK;
                         handler.sendMessage(msg);
                     } else handler.sendEmptyMessage(SHOP_EMPTY);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //获取用户头像和昵称
+                try {
+                    JSONObject req = new JSONObject();
+                    req.put("type", "UG");
+                    req.put("id", id + "");
+                    req.put("table", "info_shop");
+                    Log.i(TAG, "run: 试图获取商户信息");
+                    Message msg = Message.obtain();
+                    msg.obj = createData.post_m(req).get(0);
+                    msg.what = GET_INFO_OK;
+                    handler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

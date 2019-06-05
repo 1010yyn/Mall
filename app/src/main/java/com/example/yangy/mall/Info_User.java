@@ -32,6 +32,8 @@ public class Info_User extends AppCompatActivity {
 
     private int idofUser;
 
+    String type;
+
     private static String rst;
 
     private Handler handler = new Handler() {
@@ -63,15 +65,18 @@ public class Info_User extends AppCompatActivity {
         Intent intent = getIntent();
         bundle = intent.getExtras();
         idofUser = bundle.getInt("id");
+        type = bundle.getString("type");
         Log.i(TAG, "成功跳转到个人信息页面");
-        //TODO——商户信息
         //获取用户信息
         final JSONObject req = new JSONObject();
         try {
+            if (type.equals("user"))//获取用户信息
+                req.put("table", "info_user");
+            else req.put("table", "info_shop");//获取商户信息
             req.put("type", "UG");
             req.put("id", idofUser + "");
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
         new Thread(new Runnable() {
             @Override
@@ -115,6 +120,7 @@ public class Info_User extends AppCompatActivity {
                 Log.i(TAG, "跳转到修改用户信息界面");
                 intent2 = new Intent(Info_User.this, Info_User_Modify.class);
                 bundle.putInt("idofUser", idofUser);
+                bundle.putString("type", type);
                 intent2.putExtras(bundle);
                 startActivityForResult(intent2, REQUEST_CODE, bundle);
             }

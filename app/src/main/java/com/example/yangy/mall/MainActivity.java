@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     case "个人信息":
                         intent = new Intent(MainActivity.this, Info_User.class);//为个人信息界面创建intent
                         intent.putExtra("id", idOfuser);
+                        intent.putExtra("type", "user");
                         Log.i(TAG, "正在跳转页面到个人信息页面");
                         startActivityForResult(intent, REQUEST_CODE);
                         break;
@@ -564,6 +565,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject req = new JSONObject();
                     req.put("type", "UG");
                     req.put("id", idOfuser + "");
+                    req.put("table", "info_user");
                     Log.i(TAG, "run: 试图获取个人信息");
                     Message msg = Message.obtain();
                     msg.obj = createData.post_m(req).get(0);

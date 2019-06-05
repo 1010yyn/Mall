@@ -37,8 +37,8 @@ public class CreateData extends Activity {
 
     private String TAG = "MYTAG";
 
-    //private String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
-    private String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
+    private String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
+    //private String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
     // private String strUrl = "http://172.22.76.50:8080/MyServer/server_servlet";//图书馆
     //设置访问目标网页url
 

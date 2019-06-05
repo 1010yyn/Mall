@@ -32,6 +32,7 @@ public class Info_User_Modify extends AppCompatActivity {
     private String Head, Id, Nickname, Phone, Address;
 
     private int idofUser;
+    String type;
 
     private CreateData getdata = new CreateData();
 
@@ -58,6 +59,7 @@ public class Info_User_Modify extends AppCompatActivity {
         intent1 = getIntent();
         bundle = intent1.getExtras();
         idofUser = bundle.getInt("idofUser");
+        type = bundle.getString("type");
         Log.i(TAG, "成功跳转信息修改界面");
 
         //获取个人信息界面信息，填充至修改界面
@@ -120,6 +122,9 @@ public class Info_User_Modify extends AppCompatActivity {
                         bundle.putCharSequence("head", Head);
                         JSONObject js = new JSONObject();
                         try {
+                            if (type.equals("user"))
+                                js.put("table", "info_user");
+                            else js.put("table", "info_shop");
                             js.put("type", "UU");
                             js.put("id", idofUser);
                             js.put("nick", Nickname);
@@ -128,7 +133,7 @@ public class Info_User_Modify extends AppCompatActivity {
                             js.put("head", Head);
                             update(js);
                         } catch (Exception e) {
-                            Log.e(TAG, "update info_user error!");
+                            Log.e(TAG, "update info error!");
                         }
                     }
                 });

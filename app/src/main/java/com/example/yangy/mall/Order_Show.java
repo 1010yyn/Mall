@@ -88,7 +88,7 @@ public class Order_Show extends AppCompatActivity {
                     //获取订单信息
                     req = new JSONObject();
                     Log.i(TAG, "run: 获取订单信息");
-                    if (bundle.getString("type").equals("user")) {
+                    if (bundle.getString("type").equals("shop")) {
                         req.put("type", "OG_S_I");//获取订单
                         req.put("shop_id", id);//商店id
                     } else {
