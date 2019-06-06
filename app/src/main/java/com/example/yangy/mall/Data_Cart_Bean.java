@@ -74,6 +74,7 @@ public class Data_Cart_Bean implements Serializable {
             private String photo;//商品图片资源
             private boolean isSelected;//是否被选中
             private String description;//商品描述
+            private String tag;//商品标签
 
             Data_Goods_Bean() {
                 isSelected = false;
@@ -149,6 +150,14 @@ public class Data_Cart_Bean implements Serializable {
 
             String getDescription() {
                 return description;
+            }
+
+            void setTag(String tag) {
+                this.tag = tag;
+            }
+
+            String getTag() {
+                return tag;
             }
         }
     }

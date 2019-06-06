@@ -30,6 +30,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class Goods_Manager extends AppCompatActivity {
 
@@ -52,8 +54,6 @@ public class Goods_Manager extends AppCompatActivity {
     private String name1, price1, description1, photo1, sum1, tag1;
     private String type, shop_id, goods_id, shop_name;
 
-    private File file;//图片图片文件
-
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -66,7 +66,8 @@ public class Goods_Manager extends AppCompatActivity {
                     price1 = goods.getString("price");
                     description1 = goods.getString("description");
                     sum1 = goods.getString("sum");
-                    setData(1);
+                    tag1 = goods.getString("tag");
+                    setData(1);//加载商品数据——1
                 } catch (JSONException e) {
                     Log.e(TAG, "handleMessage: 解析商品数据失败");
                     e.printStackTrace();
@@ -104,7 +105,7 @@ public class Goods_Manager extends AppCompatActivity {
                 price1 = "";
                 description1 = "";
                 tag1 = "";
-                setData(0);
+                setData(0);//新建——0
                 break;
             case "edit":
                 try {
@@ -172,6 +173,22 @@ public class Goods_Manager extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     Log.i(TAG, "确认");
+                    //处理图片
+                    photo.setDrawingCacheEnabled(true);
+                    Bitmap bitmap = ((BitmapDrawable) photo.getDrawable()).getBitmap();//获取头像图片
+                    photo.setDrawingCacheEnabled(false);
+                    //bitmap转file
+                    Calendar cld = Calendar.getInstance();
+                    cld.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));//设置时区
+                    String time = cld.get(Calendar.YEAR) + String.valueOf(cld.get(Calendar.MONTH) + 1) + cld.get(Calendar.DATE) + String.valueOf(cld.get(Calendar.HOUR) + 12) + cld.get(Calendar.MINUTE) + cld.get(Calendar.SECOND) + cld.get(Calendar.MILLISECOND);
+                    //生成文件名
+                    String path = "/storage/emulated/0/" + time + ".jpg";
+                    File file = new File(path);//将要保存图片的路径
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                    bos.flush();
+                    bos.close();
+
                     JSONObject req = new JSONObject();
                     if (type.equals("new"))
                         req.put("type", "GA");//商品添加
@@ -184,21 +201,10 @@ public class Goods_Manager extends AppCompatActivity {
                     req.put("shop_name", shop_name);
                     req.put("price", price.getText());
                     req.put("sum", sum.getText());
-                    req.put("photo", "");
+                    req.put("photo", "D:/Courses/Pics/" + time + ".jpg");
                     req.put("description", description.getText());
                     req.put("tag", tag.getText());
 
-                    //TODO——图片单独传
-                    photo.setDrawingCacheEnabled(true);
-                    Bitmap bitmap = ((BitmapDrawable) photo.getDrawable()).getBitmap();//获取头像图片
-                    photo.setDrawingCacheEnabled(false);
-                    //bitmap转file
-                    String path = "/storage/emulated/0/1234.jpg";
-                    File file = new File(path);//将要保存图片的路径
-                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                    bos.flush();
-                    bos.close();
                     update(req, file, path);//添加/修改商品信息
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -215,18 +221,10 @@ public class Goods_Manager extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                getdata.post_p(imagePath);
                 String rst = getdata.post_m(req).get(0);
                 if (rst.equals("true")) {
-                    try {
-                        rst = getdata.uploadImage("", imagePath, file);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    if (rst.equals("true"))
                         handler.sendEmptyMessage(UPDATE_OK);
-                    else handler.sendEmptyMessage(UPDATE_ERROR);
                 } else handler.sendEmptyMessage(UPDATE_ERROR);
             }
         }).start();
