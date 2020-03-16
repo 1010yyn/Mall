@@ -1,10 +1,8 @@
 package com.example.yangy.mall;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -12,35 +10,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import static android.net.sip.SipErrorCode.TIME_OUT;
-import static android.provider.Telephony.Mms.Part.CHARSET;
 
 public class CreateData extends Activity {
 
     private String TAG = "MYTAG";
 
-    private String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
+    //private String strUrl = "http://172.17.104.159:8080/MyServer/server_servlet";//宿舍
+    private String strUrl = "http://192.168.0.104:8080/MyServer/server_servlet";//家
     //private String strUrl = "http://192.168.43.110:8080/MyServer/server_servlet";//手机
     // private String strUrl = "http://172.22.76.50:8080/MyServer/server_servlet";//图书馆
     //设置访问目标网页url
