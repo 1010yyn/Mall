@@ -4,6 +4,7 @@
 
 ### Android客户端通信实现
 主要使用http协议来进行客户端与服务器的通信，具体实现上使用HttpUrlConnection来进行通信。
+![通信](http://imglf3.nosdn0.126.net/img/K2JMZkxjQi9SLzY4SzdwZlBBaTB2cmU3VXFwOVlqYXVqZ0dyd3NkTGpTaFV3VUpJaWpjbU13PT0.png?imageView&thumbnail=500x0&quality=96&stripmeta=0)
 
 ### 客户端功能设定
 根据用户类型，分为顾客与商户两种，不同类型的用户所需功能不同。
@@ -30,7 +31,7 @@
 
     顾客在成功登陆时，服务器将用户的个人信息一并返回，在跳转至主界面时加载出来。信息的显示主要使用imageview以及text文本框。用户在个人中心可以对个人信息例如昵称，电话号码，地址等，进行修改。修改后的信息立刻在数据库中进行修改。
 
-![个人信息](http://imglf4.nosdn0.126.net/img/K2JMZkxjQi9SLzY4SzdwZlBBaTB2ayswODhRU1A1ODZvMXgzNHBUbzNFRzE5K3JoUS91d2pBPT0.png?imageView&thumbnail=1680x0&quality=96&stripmeta=0)
+![个人信息](http://imglf5.nosdn0.126.net/img/K2JMZkxjQi9SLzY4SzdwZlBBaTB2b3VJZEdJWWtmR204OStWc2ovZ1ZoV2M5OURFMVB1eGRnPT0.png?imageView&thumbnail=500x0&quality=96&stripmeta=0)
 
 3. 商品/商店信息检索功能
 
