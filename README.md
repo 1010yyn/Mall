@@ -11,7 +11,7 @@
 ### 顾客功能设定
 顾客主要在系统中进行购物，所需功能基本可分为 登录/注册、管理个人信息、商品/商店信息检索、浏览商品/商店信息、购物车管理、查看订单、收藏夹/黑名单以及基本的检索商品/商店功能。
 
-![总体设计](http://www.life.uestc.edu.cn/dfiles/21835/static/img/logo.png)
+![总体设计](http://imglf5.nosdn0.126.net/img/K2JMZkxjQi9SLzY4SzdwZlBBaTB2c2VTODN2V2dDNXlZNVlVV1dhK0dldVNNNXRER3hkNzVBPT0.png?imageView&thumbnail=1680x0&quality=96&stripmeta=0)
 
 ### 商户功能设定
 商户在系统中主要进行商品经营，所需的功能基本可为 登录/注册、管理商店内商品、查看订单信息以及基本的检索商品功能。
